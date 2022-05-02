@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useWallet } from "../../context/WalletProvider";
 import styles from "../../styles/Home.module.css";
 
 export default function Navbar() {
-    const [user, setUser] = useState(null);
+    const { connectWallet, wallet, signOutWallet, isAuthenticating } = useWallet();
 
     return (
         <div className={styles.nav}>
@@ -15,13 +15,24 @@ export default function Navbar() {
                     Home
                 </Link>
             </div>
-            {user ? (
+            {wallet ? (
                 <div className="px-4">
-                    <strong>{user.displayName}</strong>
-                    <button className="rounded-full bg-green-200 px-2 py-1 mx-4">Disconnect Wallet</button>
+                    <button
+                        disabled={isAuthenticating}
+                        className="rounded-full bg-green-200 px-2 py-1 mx-4  disabled:bg-gray-400"
+                        onClick={() => signOutWallet()}
+                    >
+                        Disconnect {wallet.substring(0, 5)}
+                    </button>
                 </div>
             ) : (
-                <button className="rounded-full bg-green-200 px-2 py-1 mx-4">Connect Wallet</button>
+                <button
+                    disabled={isAuthenticating}
+                    className="rounded-full bg-green-200 px-2 py-1 mx-4 disabled:bg-gray-400"
+                    onClick={() => connectWallet()}
+                >
+                    Connect Wallet
+                </button>
             )}
         </div>
     );
