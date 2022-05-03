@@ -31,7 +31,7 @@ const WalletProvider = (props) => {
     const connectWallet = async () => {
         try {
             if (!isAuthenticated) {
-                const account = await authenticate({ signingMessage: "Welcome to SportsVybe, please sign in to continue" });
+                const account = await authenticate({ chainId: 80001, signingMessage: "Welcome to SportsVybe, please sign in to continue" });
                 if (account) setWallet(account.get("ethAddress"));
                 if (wallet) console.log("connected", account, account.get("ethAddress"));
             }
