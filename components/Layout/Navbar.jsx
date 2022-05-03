@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useWallet } from "../../context/WalletProvider";
+import headerLogo from "../../public/header_logo.png";
 import styles from "../../styles/Home.module.css";
 
 export default function Navbar() {
@@ -7,12 +9,22 @@ export default function Navbar() {
 
     return (
         <div className={styles.nav}>
-            <div className={styles.logo}>
-                <div className="p-3 rounded bg-green-100">Logo</div>
+            <div>
+                <Image src={headerLogo} alt="SportsVybe Logo" width={120} height={30} />
             </div>
             <div className="px-4">
                 <Link href="/" className="px-2">
                     Home
+                </Link>
+            </div>
+            <div className="px-4">
+                <Link href="/player" className="px-2">
+                    Profile
+                </Link>
+            </div>
+            <div className="px-4">
+                <Link href="/teams" className="px-2">
+                    Teams
                 </Link>
             </div>
             {wallet ? (

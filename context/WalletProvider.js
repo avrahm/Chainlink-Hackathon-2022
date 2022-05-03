@@ -1,8 +1,10 @@
+import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 
 const defaultState = {
     wallet: "",
+    user: {},
     signOutWallet: () => {},
     connectWallet: () => {},
 };
@@ -12,6 +14,8 @@ const WalletContext = createContext(defaultState);
 const WalletProvider = (props) => {
     const { children } = props;
     const [wallet, setWallet] = useState(null);
+
+    const router = useRouter();
 
     const { authenticate, isAuthenticated, user, logout, isAuthenticating } = useMoralis();
 
@@ -32,7 +36,10 @@ const WalletProvider = (props) => {
         try {
             if (!isAuthenticated) {
                 const account = await authenticate({ chainId: 80001, signingMessage: "Welcome to SportsVybe, please sign in to continue" });
-                if (account) setWallet(account.get("ethAddress"));
+                if (account) {
+                    setWallet(account.get("ethAddress"));
+                    router.push("/player");
+                }
                 if (wallet) console.log("connected", account, account.get("ethAddress"));
             }
         } catch (error) {
@@ -57,6 +64,7 @@ const WalletProvider = (props) => {
         <WalletContext.Provider
             value={{
                 wallet,
+                user,
                 isAuthenticating,
                 signOutWallet,
                 connectWallet,
