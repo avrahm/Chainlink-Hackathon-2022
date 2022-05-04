@@ -12,6 +12,7 @@ export default function Navbar() {
             <div>
                 <Image src={headerLogo} alt="SportsVybe Logo" width={120} height={30} />
             </div>
+
             <div className="px-4">
                 <Link href="/" className="px-2">
                     Home
@@ -27,8 +28,8 @@ export default function Navbar() {
                     Teams
                 </Link>
             </div>
-            {wallet ? (
-                <div className="px-4">
+            <div className="px-4">
+                {wallet ? (
                     <button
                         disabled={isAuthenticating}
                         className="rounded-full bg-green-200 px-2 py-1 mx-4  disabled:bg-gray-400"
@@ -36,16 +37,16 @@ export default function Navbar() {
                     >
                         Disconnect {wallet.substring(0, 5)}
                     </button>
-                </div>
-            ) : (
-                <button
-                    disabled={isAuthenticating}
-                    className="rounded-full bg-green-200 px-2 py-1 mx-4 disabled:bg-gray-400"
-                    onClick={() => connectWallet()}
-                >
-                    Connect Wallet
-                </button>
-            )}
+                ) : (
+                    <button
+                        disabled={isAuthenticating}
+                        className="rounded-full bg-green-200 px-2 py-1 mx-4 disabled:bg-gray-400"
+                        onClick={() => connectWallet()}
+                    >
+                        Connect Wallet
+                    </button>
+                )}
+            </div>
         </div>
     );
 }

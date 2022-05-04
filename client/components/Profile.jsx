@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 
 export default function Profile({ wallet, user }) {
     const [open, setOpen] = useState(false);
+    const [userData, setUserData] = useState(user);
 
-    console.log(user);
+    useEffect(() => {
+        if (user) {
+            const { attributes } = user;
+            setUserData(attributes);
+        }
+    }, [user]);
 
-    const { attributes } = user;
-    console.log(attributes);
     return (
         <div className="flex flex-col justify-center items-center">
             <h1>Player Profile</h1>
@@ -24,26 +28,36 @@ export default function Profile({ wallet, user }) {
                 <div className="flex flex-row my-4 justify-center items-center border-2 border-emerald-400 p-5">
                     <div className="flex flex-col w-1/2 items-center justify-center">Picture</div>
                     <div className="flex flex-col w-1/2">
-                        <span>Name</span>
-                        <span>Member Since - Created By Date</span>
+                        <span>{userData.displayName ? userData.displayName : "--"}</span>
+                        <span>Member Since {userData.createdAt.toLocaleDateString("en-US", { year: "numeric" })}</span>
                     </div>
                 </div>
                 <p> Connected Wallet: {wallet}</p>
 
                 <button onClick={() => setOpen(true)} className="px-4 py-3 my-4 bg-gray-200 rounded-full">
-                    {attributes.IsNewUser ? "Complete Profile" : "Update Profile"}
+                    {userData.IsNewUser ? "Complete Profile" : "Update Profile"}
                 </button>
 
                 <div className="flex flex-row my-4 justify-center items-center border-2 border-emerald-400 p-5">
                     <div className="flex flex-col w-1/2 items-center">
-                        <span className="p-3">Record</span>
+                        <span className="p-3">
+                            Record: {userData.wins} Wins - {userData.losses} Losses
+                        </span>
                         <span className="p-3">
                             Winnings <br /> (Private Total - Public Range)
                         </span>
                     </div>
                     <div className="flex flex-col w-1/2 items-center">
-                        <span className="p-3">100% Proof of Sportsmanship</span>
-                        <span className="p-3">Sport Preferences</span>
+                        <span className="p-3">{userData.pos ? userData.pos : "100%"}</span>
+                        <span className="p-3">
+                            Sport Preferences:
+                            <ul>
+                                {userData.sportsPreferences &&
+                                    userData.sportsPreferences.map((sport, i) => {
+                                        return <li key={i}>{sport}</li>;
+                                    })}
+                            </ul>
+                        </span>
                     </div>
                 </div>
 
@@ -71,22 +85,31 @@ export default function Profile({ wallet, user }) {
 
             <div>
                 <Modal open={open} onClose={() => setOpen(false)}>
-                    <EditProfile user={user} />
+                    <EditProfile user={userData} />
                 </Modal>
             </div>
         </div>
     );
 }
 
-const EditProfile = (user) => {
+const EditProfile = ({ user }) => {
+    const [editDisplayName, setEditDisplayName] = useState(user.displayName || "");
+    const [editSportsPreferences, setEditSportsPreferences] = useState("null");
+    console.log(user, editDisplayName, editSportsPreferences);
+
     return (
         <div className="flex flex-col border-2 border-green-100 p-4 items-center">
-            <p>New User</p>
-            <span className="py-2">Please complete profile:</span>
-            <p>Display Name: </p>
-            <p>UserName: </p>
-            <p>Preferences: </p>
-            <p>Picture (?)</p>
+            <div>Edit Profile</div>
+            {user.IsNewUser && <span className="py-2">Please complete profile:</span>}
+            <div className="p-2">
+                Display Name: <input value={editDisplayName} onChange={(e) => setEditDisplayName(e)} />
+            </div>
+            <div className="p-2">
+                Sports Preferences: <input value={editSportsPreferences} onChange={(e) => setEditSportsPreferences(e)} />
+            </div>
+            <div className="p-2">
+                Picture: <input type="file" />
+            </div>
             <button className="my-3 px-2 py-1 bg-green-300 rounded-full">Save</button>
         </div>
     );
