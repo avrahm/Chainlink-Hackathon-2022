@@ -40,7 +40,9 @@ export default function Modal({ open, onClose, children }) {
                     } transition-opacity duration-300 ease-in-out`}
                 >
                     <div>
-                        <button onClick={onClose}>Click to close modal</button>
+                        <button className="font-bold" onClick={onClose}>
+                            Close
+                        </button>
                     </div>
                     {children}
                 </div>

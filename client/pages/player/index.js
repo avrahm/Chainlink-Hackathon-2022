@@ -10,7 +10,6 @@ export default function PlayerPage() {
             <Head>
                 <title>Player Profile</title>
                 <meta name="description" content="Player Profile" />
-                <link rel="icon" href="/favicon.ico" />
             </Head>
             {wallet && user ? (
                 <Profile wallet={wallet} user={user} />
