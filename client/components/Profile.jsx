@@ -1,9 +1,11 @@
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useMoralisQuery } from "react-moralis";
+import { EditProfile } from "./EditProfile";
 import Modal from "./Modal";
 import { TeamsCard } from "./TeamCard";
 
-export default function Profile({ wallet, user }) {
+export default function Profile({ user }) {
     const [open, setOpen] = useState(false);
     const [userData, setUserData] = useState(user);
     const [teams, setTeams] = useState([]);
@@ -16,8 +18,6 @@ export default function Profile({ wallet, user }) {
         const teams = await fetch();
         setTeams(teams || []);
     };
-
-    console.log(teams);
 
     useEffect(() => {
         if (user) {
@@ -43,7 +43,15 @@ export default function Profile({ wallet, user }) {
                 {/* profile card */}
                 <div className="flex flex-col w-full justify-center items-center border-2 border-emerald-400 p-5">
                     <div className="flex flex-row my-4 w-full justify-center items-center">
-                        <div className="flex flex-col w-1/2 items-center justify-center">Picture</div>
+                        <div className="flex flex-col w-1/2 items-center justify-center">
+                            <div className="max-w-[120px]">
+                                {userData.profilePicture ? (
+                                    <Image src={userData.profilePicture} alt="SportsVybe Logo" height={200} width={160} priority />
+                                ) : (
+                                    <Image src="/images/profile_placeholder.png" alt="SportsVybe Logo" width={160} height={160} priority />
+                                )}
+                            </div>
+                        </div>
                         <div className="flex flex-col w-1/2">
                             <span>{userData.displayName ? userData.displayName : "--"}</span>
                             <span>
@@ -55,7 +63,7 @@ export default function Profile({ wallet, user }) {
                 </div>
 
                 <button onClick={() => setOpen(true)} className="px-4 py-3 my-4 bg-gray-200 rounded-full">
-                    {userData.IsNewUser ? "Complete Profile" : "Update Profile"}
+                    {userData.IsNewUser || userData.IsNewUser == undefined ? "Complete Profile" : "Edit Profile"}
                 </button>
 
                 <div className="flex flex-row my-4 justify-center items-start border-2 border-emerald-400 p-2">
@@ -88,18 +96,18 @@ export default function Profile({ wallet, user }) {
                     </div>
                 </div>
 
-                <div className="flex flex-col my-4 justify-around items-center border-2 border-emerald-400 p-2">
-                    <div className="flex flex-col justify-around items-center">
-                        <div className="flex flex-row w-1/2 justify-center  items-center">
-                            <h1>Team(s) </h1>
-                            <button className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full">Create Team</button>
-                        </div>
-                        {teams &&
-                            !isLoading &&
-                            teams.map((team, i) => {
-                                return <TeamsCard team={team.attributes} key={i} leaveTeam={true} />;
-                            })}
+                <div className="flex flex-col my-4 w-full justify-around items-center border-2 border-emerald-400 p-2">
+                    <div className="flex flex-row w-full justify-center py-3 items-center">
+                        <h1>Team(s) </h1>
+                        <button className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full">Create Team</button>
                     </div>
+                    {teams && !isLoading ? (
+                        teams.map((team, i) => {
+                            return <TeamsCard team={team.attributes} key={i} leaveTeam={true} />;
+                        })
+                    ) : (
+                        <h1>No Teams</h1>
+                    )}
                 </div>
             </div>
 
@@ -111,38 +119,3 @@ export default function Profile({ wallet, user }) {
         </div>
     );
 }
-
-const EditProfile = ({ user }) => {
-    const [editDisplayName, setEditDisplayName] = useState("");
-    const [editSportsPreferences, setEditSportsPreferences] = useState("");
-
-    useEffect(() => {
-        if (user) {
-            setEditDisplayName(user.displayName);
-            setEditSportsPreferences(user.sportsPreferences);
-        }
-    }, [user]);
-
-    return (
-        <div className="flex flex-col border-2 border-green-100 p-4 items-center">
-            <div>Edit Profile</div>
-
-            {user.IsNewUser && <span className="py-2">Please complete profile:</span>}
-
-            <div className="p-2">
-                <span>Display Name:</span>
-                <input value={editDisplayName} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setEditDisplayName(e)} />
-            </div>
-
-            <div className="p-2">
-                <span>Sports Preferences:</span>
-                <input value={editSportsPreferences} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setEditSportsPreferences(e)} />
-            </div>
-
-            {/* <div className="p-2">
-                <span>Picture:</span> <input type="file" className="mx-3 px-2 py-1 rounded bg-gray-300" />
-            </div> */}
-            <button className="my-3 px-2 py-1 bg-green-300 rounded-full">Save</button>
-        </div>
-    );
-};
