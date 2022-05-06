@@ -19,7 +19,7 @@ export default function Navbar() {
                 </Link>
             </div>
             <div className="px-4">
-                <Link href="/player" className="px-2">
+                <Link href="/profile" className="px-2">
                     Profile
                 </Link>
             </div>

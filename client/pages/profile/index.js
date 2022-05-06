@@ -1,8 +1,8 @@
 import Head from "next/head";
-import Profile from "../../components/Profile";
+import { ProfileController } from "../../components/controllers/ProfileController";
 import { useWallet } from "../../context/WalletProvider";
 
-export default function PlayerPage() {
+export default function ProfilePage() {
     const { wallet, user, isAuthenticating, connectWallet } = useWallet();
 
     return (
@@ -12,7 +12,7 @@ export default function PlayerPage() {
                 <meta name="description" content="Player Profile" />
             </Head>
             {wallet && user ? (
-                <Profile wallet={wallet} user={user} />
+                <ProfileController user={user} username={user.attributes.username} wallet={wallet} />
             ) : (
                 <div className="flex flex-col justify-center items-center">
                     <p> No User Signed in</p>
