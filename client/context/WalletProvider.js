@@ -13,24 +13,9 @@ const WalletContext = createContext(defaultState);
 
 const WalletProvider = (props) => {
     const { children } = props;
-    const [wallet, setWallet] = useState(null);
-
     const router = useRouter();
-
     const { authenticate, isAuthenticated, user, logout, isAuthenticating } = useMoralis();
-
-    const signOutWallet = () => {
-        setWallet(null);
-        logout();
-    };
-
-    useEffect(() => {
-        // if the user isAuthenticated then check if wallet is connected
-        if (isAuthenticated) {
-            checkIfWalletIsConnected();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAuthenticated]);
+    const [wallet, setWallet] = useState(null);
 
     const connectWallet = async () => {
         try {
@@ -38,7 +23,7 @@ const WalletProvider = (props) => {
                 const account = await authenticate({ chainId: 80001, signingMessage: "Welcome to SportsVybe, please sign in to continue" });
                 if (account) {
                     setWallet(account.get("ethAddress"));
-                    router.push("/player");
+                    router.push("/profile");
                 }
                 if (wallet) console.log("connected", account, account.get("ethAddress"));
             }
@@ -59,6 +44,19 @@ const WalletProvider = (props) => {
             console.error(error);
         }
     };
+
+    const signOutWallet = () => {
+        setWallet(null);
+        logout();
+    };
+
+    useEffect(() => {
+        // if the user isAuthenticated then check if wallet is connected
+        if (isAuthenticated) {
+            checkIfWalletIsConnected();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAuthenticated]);
 
     return (
         <WalletContext.Provider
