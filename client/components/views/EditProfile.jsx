@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useMoralis, useMoralisFile } from "react-moralis";
+import { useMoralisFile } from "react-moralis";
 import Modal from "../Layout/Modal";
 
-export const EditProfile = ({ user, toggleModal, modalView }) => {
-    const { setUserData, userError, isUserUpdating } = useMoralis();
-    const { error, isUploading, saveFile } = useMoralisFile();
+export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
     const router = useRouter();
+    const { error, isUploading, saveFile } = useMoralisFile();
 
     const [editDisplayName, setEditDisplayName] = useState("");
     const [newSportInput, setNewSportInput] = useState("");
@@ -15,19 +14,21 @@ export const EditProfile = ({ user, toggleModal, modalView }) => {
 
     const handleSubmit = async (e) => {
         const formData = {
-            displayName: editDisplayName,
-            sportsPreferences: editSportsPreferences,
-            IsNewUser: false,
+            userDisplayName: editDisplayName,
+            userSportsPreferences: editSportsPreferences,
+            newUser: false, // activate user by default
         };
 
-        if (file) {
-            const fileUpload = await saveFile(user.username, file);
-            formData.profilePicture = fileUpload._url;
+        try {
+            if (file) {
+                const fileUpload = await saveFile(user.username, file);
+                formData.userPhoto = fileUpload._url;
+            }
+            await userObject.save(formData);
+            if (!userObject.isSaving) router.reload();
+        } catch (error) {
+            console.error(error);
         }
-
-        await setUserData(formData);
-        setFile(null);
-        router.reload();
     };
 
     const handleAddSportsPreferences = () => {
@@ -52,9 +53,10 @@ export const EditProfile = ({ user, toggleModal, modalView }) => {
             <div className="flex flex-col border-2 border-green-100 p-4 items-center">
                 <div>Edit Profile</div>
 
-                {user.IsNewUser || (user.IsNewUser == undefined && <span className="py-2 text-red-400">Please complete profile:</span>)}
-                {userError && <span className="py-2">User Update Error:{userError}</span>}
-                {error && <span className="py-2">Upload Error: {error}</span>}
+                <div className="p-2">
+                    {user.newUser && <span className="py-2 text-red-400">Please complete profile:</span>}
+                    {error && <span className="py-2">Upload Error: {error}</span>}
+                </div>
 
                 <div className="p-2">
                     <span>Display Name:</span>
@@ -68,7 +70,11 @@ export const EditProfile = ({ user, toggleModal, modalView }) => {
                 <div className="p-2">
                     <span>Sports Preferences:</span>
                     <input value={newSportInput} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setNewSportInput(e.target.value)} />
-                    <button onClick={() => handleAddSportsPreferences()} className="px-2 py-1 rounded bg-green-400">
+                    <button
+                        onClick={() => handleAddSportsPreferences()}
+                        disabled={newSportInput.length < 1}
+                        className="px-2 py-1 rounded bg-green-400 disabled:bg-slate-300"
+                    >
                         Add
                     </button>
                     {editSportsPreferences != undefined && (
@@ -76,7 +82,13 @@ export const EditProfile = ({ user, toggleModal, modalView }) => {
                             {editSportsPreferences.map((sport, i) => {
                                 return (
                                     <li key={i}>
-                                        {sport.toUpperCase()} <button onClick={() => handleRemoveSportsPreferences(i)}>Remove</button>{" "}
+                                        {sport.toUpperCase()}{" "}
+                                        <button
+                                            className="bg-green-300 rounded justify-center p-1 items-center text-xs"
+                                            onClick={() => handleRemoveSportsPreferences(i)}
+                                        >
+                                            X
+                                        </button>
                                     </li>
                                 );
                             })}
@@ -93,7 +105,7 @@ export const EditProfile = ({ user, toggleModal, modalView }) => {
                         className="mx-3 px-2 py-1 rounded bg-gray-300"
                     />
                 </div>
-                <button disabled={isUserUpdating || isUploading} className="my-3 px-2 py-1 bg-green-300 rounded-full" onClick={() => handleSubmit()}>
+                <button disabled={isUploading} className="my-3 px-2 py-1 bg-green-300 rounded-full" onClick={() => handleSubmit()}>
                     Save
                 </button>
             </div>

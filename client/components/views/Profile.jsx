@@ -1,10 +1,12 @@
 import Image from "next/image";
 import { useState } from "react";
+import { CreateTeam } from "./CreateTeam";
 import { EditProfile } from "./EditProfile";
 import { TeamsCard } from "./TeamCard";
 
-export default function Profiles({ user, teams, isLoading, wallet }) {
+export default function Profiles({ user, teams, isLoading, wallet, userObject }) {
     const [editProfileModal, toggleEditProfileModal] = useState(false);
+    const [createTeamModal, toggleCreateTeamModal] = useState(false);
 
     return (
         <div className="flex flex-col justify-center items-center">
@@ -26,9 +28,9 @@ export default function Profiles({ user, teams, isLoading, wallet }) {
                         <div className="flex flex-col w-1/2 items-center justify-center">
                             <div className="max-w-[120px]">
                                 {user.userPhoto ? (
-                                    <Image src={user.userPhoto} alt="SportsVybe Logo" height={200} width={160} priority />
+                                    <Image src={user.userPhoto} alt={user.userDisplayName} height={200} width={160} priority />
                                 ) : (
-                                    <Image src="/images/profile_placeholder.png" alt="SportsVybe Logo" width={160} height={160} priority />
+                                    <Image src="/images/profile_placeholder.png" alt="User placeholder" width={160} height={160} priority />
                                 )}
                             </div>
                         </div>
@@ -41,7 +43,7 @@ export default function Profiles({ user, teams, isLoading, wallet }) {
                 </div>
                 {wallet ? (
                     <button onClick={() => toggleEditProfileModal(true)} className="px-4 py-3 my-4 bg-gray-200 rounded-full">
-                        {user.userStatus || user.userStatus == undefined ? "Complete Profile" : "Edit Profile"}
+                        {user.newUser ? "Complete Profile" : "Edit Profile"}
                     </button>
                 ) : (
                     <button onClick={() => alert("Challenge")} className="px-4 py-3 my-4 bg-gray-200 rounded-full">
@@ -82,7 +84,9 @@ export default function Profiles({ user, teams, isLoading, wallet }) {
                 <div className="flex flex-col my-4 w-full justify-around items-center border-2 border-emerald-400 p-2">
                     <div className="flex flex-row w-full justify-center py-3 items-center">
                         <h1>Team(s) </h1>
-                        <button className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full">Create Team</button>
+                        <button className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full" onClick={() => toggleCreateTeamModal(!createTeamModal)}>
+                            Create Team
+                        </button>
                     </div>
                     {teams && isLoading ? (
                         teams.map((team, i) => {
@@ -95,8 +99,8 @@ export default function Profiles({ user, teams, isLoading, wallet }) {
             </div>
 
             <div>
-                <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} />
-                {/* <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} /> */}
+                <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} userObject={userObject} />
+                <CreateTeam toggleModal={toggleCreateTeamModal} modalView={createTeamModal} />
             </div>
         </div>
     );
