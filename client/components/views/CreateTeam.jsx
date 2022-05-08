@@ -1,33 +1,48 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useMoralisFile } from "react-moralis";
+import { useMoralisFile, useNewMoralisObject } from "react-moralis";
 import Modal from "../Layout/Modal";
 
-export const CreateTeam = ({ team = false, toggleModal, modalView }) => {
+export const CreateTeam = ({ user, team = false, toggleModal, modalView }) => {
+    const newTeam = {
+        teamWins: 0,
+        teamWinnings: 0,
+        teamLosses: 0,
+        teamPOS: 100,
+    };
+
     const { error, isUploading, saveFile } = useMoralisFile();
+    const createNewTeam = useNewMoralisObject("teams");
     const router = useRouter();
 
-    const [teamDisplayName, setTeamDisplayName] = useState("");
+    const [teamName, setTeamName] = useState("");
     const [newSportInput, setNewSportInput] = useState("");
     const [teamSportsPreferences, setTeamSportsPreferences] = useState([]);
     const [file, setFile] = useState(null);
 
     const handleSubmit = async (e) => {
         const formData = {
-            teamDisplayName: teamDisplayName,
+            teamName: teamName,
             teamSportsPreferences: teamSportsPreferences,
+            teamAdmin: user.username,
+            teamMembers: [user.username],
+            ...newTeam,
         };
 
-        if (file) {
-            //     const fileUpload = await saveFile(team.teamname, file);
-            //     formData.profilePicture = fileUpload._url;
-            formData.teamPhoto = file.name;
-        }
+        const teamUsername = teamName.split(" ").join("-").toLowerCase();
 
-        // await setTeamData(formData);
-        // setFile(null);
-        // router.reload();
-        console.log(formData);
+        try {
+            formData.teamUsername = teamUsername;
+            if (file) {
+                const fileUpload = await saveFile(teamUsername, file);
+                formData.teamPhoto = fileUpload._url;
+            }
+
+            await createNewTeam.save(formData);
+            if (!createNewTeam.isSaving) router.reload();
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleAddSportsPreferences = () => {
@@ -50,17 +65,17 @@ export const CreateTeam = ({ team = false, toggleModal, modalView }) => {
 
                 <div className="p-2">
                     <span>Team Name:</span>
-                    <input
-                        value={teamDisplayName}
-                        className="mx-3 px-2 py-1 rounded bg-gray-300"
-                        onChange={(e) => setTeamDisplayName(e.target.value)}
-                    />
+                    <input value={teamName} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setTeamName(e.target.value)} />
                 </div>
 
                 <div className="p-2">
                     <span>Sports Preferences:</span>
                     <input value={newSportInput} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setNewSportInput(e.target.value)} />
-                    <button onClick={() => handleAddSportsPreferences()} className="px-2 py-1 rounded bg-green-400">
+                    <button
+                        onClick={() => handleAddSportsPreferences()}
+                        disabled={newSportInput.length < 1}
+                        className="px-2 py-1 rounded bg-green-400 disabled:bg-slate-300"
+                    >
                         Add
                     </button>
                     {teamSportsPreferences != undefined && (
@@ -68,7 +83,13 @@ export const CreateTeam = ({ team = false, toggleModal, modalView }) => {
                             {teamSportsPreferences.map((sport, i) => {
                                 return (
                                     <li key={i}>
-                                        {sport.toUpperCase()} <button onClick={() => handleRemoveSportsPreferences(i)}>Remove</button>{" "}
+                                        {sport.toUpperCase()}
+                                        <button
+                                            onClick={() => handleRemoveSportsPreferences(i)}
+                                            className="bg-red-300 rounded-full justify-center ml-4 px-2 items-center text-xs"
+                                        >
+                                            -
+                                        </button>
                                     </li>
                                 );
                             })}

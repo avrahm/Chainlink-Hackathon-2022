@@ -88,9 +88,9 @@ export default function Profiles({ user, teams, isLoading, wallet, userObject })
                             Create Team
                         </button>
                     </div>
-                    {teams && isLoading ? (
+                    {teams && !isLoading ? (
                         teams.map((team, i) => {
-                            return <TeamsCard team={team.attributes} key={i} leaveTeam={true} />;
+                            return <TeamsCard team={team.attributes} key={i} leaveTeam={true} user={user} />;
                         })
                     ) : (
                         <h1>No Teams</h1>
@@ -100,7 +100,7 @@ export default function Profiles({ user, teams, isLoading, wallet, userObject })
 
             <div>
                 <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} userObject={userObject} />
-                <CreateTeam toggleModal={toggleCreateTeamModal} modalView={createTeamModal} />
+                <CreateTeam user={user} toggleModal={toggleCreateTeamModal} modalView={createTeamModal} />
             </div>
         </div>
     );
