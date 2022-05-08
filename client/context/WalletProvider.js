@@ -17,13 +17,13 @@ const WalletProvider = (props) => {
     const { authenticate, isAuthenticated, user, logout, isAuthenticating } = useMoralis();
     const [wallet, setWallet] = useState(null);
 
-    const connectWallet = async () => {
+    const connectWallet = async (routeToProfile = true) => {
         try {
             if (!isAuthenticated) {
                 const account = await authenticate({ chainId: 80001, signingMessage: "Welcome to SportsVybe, please sign in to continue" });
                 if (account) {
                     setWallet(account.get("ethAddress"));
-                    router.push("/profile");
+                    routeToProfile && router.push("/profile");
                 }
                 if (wallet) console.log("connected", account, account.get("ethAddress"));
             }
