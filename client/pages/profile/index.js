@@ -11,7 +11,7 @@ export default function ProfilePage() {
                 <title>Player Profile</title>
                 <meta name="description" content="Player Profile" />
             </Head>
-            {wallet && user ? (
+            {wallet && user && !isAuthenticating ? (
                 <ProfileController user={user} username={user.attributes.username} wallet={wallet} />
             ) : (
                 <div className="flex flex-col justify-center items-center">
