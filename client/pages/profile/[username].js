@@ -22,7 +22,7 @@ export default function PlayerPage() {
                 <ProfileController username={username} />
             ) : (
                 <div className="flex flex-col justify-center items-center">
-                    <p> No Username</p>
+                    <p>No Username</p>
                 </div>
             )}
         </div>
