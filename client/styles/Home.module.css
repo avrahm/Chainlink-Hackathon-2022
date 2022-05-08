@@ -24,3 +24,15 @@
     position: fixed;
     top: 0;
 }
+
+.imageContainerSmall {
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+.imageContainerLarge {
+    width: 160px;
+    height: 200px;
+    position: relative;
+}

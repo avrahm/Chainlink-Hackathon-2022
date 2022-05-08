@@ -43,7 +43,7 @@ export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
 
     useEffect(() => {
         if (user) {
-            setEditDisplayName(user.userDisplayName);
+            setEditDisplayName(user.userDisplayName || "");
             setEditSportsPreferences(user.userSportsPreferences || []);
         }
     }, [user]);
@@ -82,7 +82,7 @@ export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
                             {editSportsPreferences.map((sport, i) => {
                                 return (
                                     <li key={i}>
-                                        {sport.toUpperCase()}{" "}
+                                        {sport.toUpperCase()}
                                         <button
                                             className="bg-green-300 rounded justify-center p-1 items-center text-xs"
                                             onClick={() => handleRemoveSportsPreferences(i)}
@@ -105,7 +105,11 @@ export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
                         className="mx-3 px-2 py-1 rounded bg-gray-300"
                     />
                 </div>
-                <button disabled={isUploading} className="my-3 px-2 py-1 bg-green-300 rounded-full" onClick={() => handleSubmit()}>
+                <button
+                    disabled={isUploading || userObject.isSaving}
+                    className="my-3 px-2 py-1 bg-green-300 rounded-full disabled:bg-gray-400"
+                    onClick={() => handleSubmit()}
+                >
                     Save
                 </button>
             </div>

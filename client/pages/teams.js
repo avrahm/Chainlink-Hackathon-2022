@@ -3,8 +3,8 @@ import { useMoralisQuery } from "react-moralis";
 import { TeamsCard } from "../components/views/TeamCard";
 
 export default function TeamsPage() {
-    const { fetch, data, error, isLoading } = useMoralisQuery("teams", (query) => query.equalTo("active", true), [], {
-        autoFetch: false,
+    const { fetch, data, error, isLoading } = useMoralisQuery("teams", (query) => query.equalTo("isTeamActive", true), [], {
+        autoFetch: true,
     });
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export default function TeamsPage() {
                     !isLoading &&
                     data.length > 0 &&
                     data.map((team, i) => {
-                        return <TeamsCard team={team.attributes} key={i} challengeTeam={true} />;
+                        return <TeamsCard team={team.attributes} teamObject={team} key={i} challengeTeam={true} />;
                     })}
             </div>
         </div>

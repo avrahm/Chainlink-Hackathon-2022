@@ -1,9 +1,9 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { ProfileController } from "../../components/controllers/ProfileController";
+import { TeamPageController } from "../../components/controllers/TeamPageController";
 
-export default function PlayerPage() {
+export default function TeamPage() {
     const router = useRouter();
     const getUsername = router.query.username;
     const [username, setUsername] = useState(null);
@@ -15,14 +15,14 @@ export default function PlayerPage() {
     return (
         <div className="mb-auto">
             <Head>
-                <title>Player Profile</title>
-                <meta name="description" content="Player Profile" />
+                <title>Team Profile</title>
+                <meta name="description" content="Team Profile" />
             </Head>
             {username ? (
-                <ProfileController username={username} />
+                <TeamPageController username={username} />
             ) : (
                 <div className="flex flex-col justify-center items-center">
-                    <p>No Username</p>
+                    <p> No Team</p>
                 </div>
             )}
         </div>
