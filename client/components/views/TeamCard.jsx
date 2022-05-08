@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { useWallet } from "../../context/WalletProvider";
+import { ManageTeam } from "./ManageTeam";
 
-export const TeamsCard = ({ team }) => {
+export const TeamsCard = ({ team, teamObject = null }) => {
     const { user } = useWallet();
+    const [manageTeamModal, toggleManageTeamModal] = useState(false);
     const isTeamMember = false;
     const isAdmin = false;
+
     if (user) {
         const { username } = user.attributes ? user.attributes : "";
         isTeamMember = (user && team.teamMembers.find((member) => member === username)) || false;
         isAdmin = team.teamAdmin === username || false;
     }
+
     return (
         <div className="flex flex-col my-4 w-full justify-center items-start border-2 border-emerald-400 p-2">
             <div className="flex flex-row ">
@@ -49,9 +54,14 @@ export const TeamsCard = ({ team }) => {
             <div className="flex flex-row w-full items-center justify-around p-2">
                 {user && !isTeamMember && <button className="px-2 py-1 my-4 bg-green-200 rounded-full">Challenge</button>}
                 {user && isTeamMember && <button className="px-2 py-1 my-4 bg-red-200 rounded-full">Leave Team</button>}
-                {user && isAdmin && <button className="px-2 py-1 my-4 bg-yellow-200 rounded-full">Manage Team</button>}
+                {user && isAdmin && (
+                    <button className="px-2 py-1 my-4 bg-yellow-200 rounded-full" onClick={() => toggleManageTeamModal(!manageTeamModal)}>
+                        Manage Team
+                    </button>
+                )}
                 <button className="px-2 py-1 my-4 bg-blue-400 rounded-full">View Team</button>
             </div>
+            <ManageTeam user={user} team={team} teamObject={teamObject} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} />
         </div>
     );
 };

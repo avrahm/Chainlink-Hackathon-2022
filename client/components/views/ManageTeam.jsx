@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useMoralisFile, useNewMoralisObject } from "react-moralis";
 import Modal from "../Layout/Modal";
 
-export const CreateTeam = ({ user, team = false, toggleModal, modalView }) => {
-    const newTeam = {
+export const ManageTeam = ({ user, team = false, toggleModal, modalView, createNewTeam = false, teamObject = null }) => {
+    const newTeamObject = {
         teamWins: 0,
         teamWinnings: 0,
         teamLosses: 0,
@@ -12,34 +12,41 @@ export const CreateTeam = ({ user, team = false, toggleModal, modalView }) => {
     };
 
     const { error, isUploading, saveFile } = useMoralisFile();
-    const createNewTeam = useNewMoralisObject("teams");
+    const getTeamsDB = useNewMoralisObject("teams");
     const router = useRouter();
 
-    const [teamName, setTeamName] = useState("");
+    const [teamName, setTeamName] = useState(team.teamName || "");
     const [newSportInput, setNewSportInput] = useState("");
-    const [teamSportsPreferences, setTeamSportsPreferences] = useState([]);
+    const [teamSportsPreferences, setTeamSportsPreferences] = useState(team.teamSportsPreferences || []);
+    const [isTeamActive, setisTeamActive] = useState(team.isTeamActive || false);
     const [file, setFile] = useState(null);
+    const toggleClass = " transform translate-x-6 bg-green-300";
 
     const handleSubmit = async (e) => {
-        const formData = {
+        const teamFormData = {
             teamName: teamName,
             teamSportsPreferences: teamSportsPreferences,
-            teamAdmin: user.username,
-            teamMembers: [user.username],
-            ...newTeam,
+            teamAdmin: team.teamAdmin || user.username,
+            teamMembers: team.teamMembers || [user.username],
+            isTeamActive: isTeamActive,
+            ...newTeamObject,
         };
 
+        //
         const teamUsername = teamName.split(" ").join("-").toLowerCase();
 
         try {
-            formData.teamUsername = teamUsername;
+            if (createNewTeam) teamFormData.teamUsername = teamUsername;
+            if (teamObject) teamFormData.id = teamObject.id;
             if (file) {
                 const fileUpload = await saveFile(teamUsername, file);
-                formData.teamPhoto = fileUpload._url;
+                teamFormData.teamPhoto = fileUpload._url;
             }
 
-            await createNewTeam.save(formData);
-            if (!createNewTeam.isSaving) router.reload();
+            // save team to database... this will create a new team if it doesn't exist
+            if (createNewTeam) await getTeamsDB.save(teamFormData);
+            if (teamObject) await teamObject.save(teamFormData);
+            if (!getTeamsDB.isSaving || !teamObject.isSaving) router.reload();
         } catch (error) {
             console.error(error);
         }
@@ -58,19 +65,43 @@ export const CreateTeam = ({ user, team = false, toggleModal, modalView }) => {
     return (
         <Modal open={modalView} onClose={() => toggleModal(false)}>
             <div className="flex flex-col border-2 border-green-100 p-4 items-center">
-                <div>Create Team</div>
+                <div> {createNewTeam ? "Create Team" : "Manage Team"}</div>
 
                 {/* {teamError && <span className="py-2">Team Update Error:{teamError}</span>} */}
                 {/* {error && <span className="py-2">Upload Error: {error}</span>} */}
 
                 <div className="p-2">
-                    <span>Team Name:</span>
-                    <input value={teamName} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setTeamName(e.target.value)} />
+                    <span htmlFor="teamName">Team Name:</span>
+                    <input
+                        id="teamName"
+                        value={teamName}
+                        className="mx-3 px-2 py-1 rounded bg-gray-300"
+                        onChange={(e) => setTeamName(e.target.value)}
+                    />
                 </div>
-
                 <div className="p-2">
-                    <span>Sports Preferences:</span>
-                    <input value={newSportInput} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setNewSportInput(e.target.value)} />
+                    <div className="flex flex-row justify-center">
+                        <label className="mx-3">{isTeamActive ? "Active" : "Inactive"}</label>
+                        <div
+                            className="md:w-14 md:h-7 w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 cursor-pointer"
+                            onClick={() => {
+                                setisTeamActive(!isTeamActive);
+                            }}
+                        >
+                            <div
+                                className={"bg-white md:w-6 md:h-6 h-5 w-5 rounded-full shadow-md transform" + (isTeamActive ? toggleClass : null)}
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="p-2">
+                    <span htmlFor="sportsInput">Sports Preferences:</span>
+                    <input
+                        id="sportsInput"
+                        value={newSportInput}
+                        className="mx-3 px-2 py-1 rounded bg-gray-300"
+                        onChange={(e) => setNewSportInput(e.target.value)}
+                    />
                     <button
                         onClick={() => handleAddSportsPreferences()}
                         disabled={newSportInput.length < 1}
@@ -107,7 +138,7 @@ export const CreateTeam = ({ user, team = false, toggleModal, modalView }) => {
                     />
                 </div>
                 <button className="my-3 px-2 py-1 bg-green-300 rounded-full" onClick={() => handleSubmit()}>
-                    Create Team
+                    {createNewTeam ? "Create Team" : "Update Team"}
                 </button>
             </div>
         </Modal>

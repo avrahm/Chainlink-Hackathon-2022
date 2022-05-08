@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { useState } from "react";
-import { CreateTeam } from "./CreateTeam";
 import { EditProfile } from "./EditProfile";
+import { ManageTeam } from "./ManageTeam";
 import { TeamsCard } from "./TeamCard";
 
 export default function Profiles({ user, teams, isLoading, wallet, userObject }) {
     const [editProfileModal, toggleEditProfileModal] = useState(false);
-    const [createTeamModal, toggleCreateTeamModal] = useState(false);
+    const [manageTeamModal, toggleManageTeamModal] = useState(false);
 
     return (
         <div className="flex flex-col justify-center items-center">
@@ -15,10 +15,10 @@ export default function Profiles({ user, teams, isLoading, wallet, userObject })
             </div>
 
             {/* 
-                !ToDo: finish 
+                TODO:  
                 Challenge button (private - player page only)
-                List of events (private - events page)
-                List of teams (private - teams page)
+                List of events (private - events only show for signed in user)
+                List of teams (private - teams on show for signed in user)
                 Winnings (private: Total - private: Range)
             */}
             <div className="flex flex-col w-full">
@@ -84,13 +84,14 @@ export default function Profiles({ user, teams, isLoading, wallet, userObject })
                 <div className="flex flex-col my-4 w-full justify-around items-center border-2 border-emerald-400 p-2">
                     <div className="flex flex-row w-full justify-center py-3 items-center">
                         <h1>Team(s) </h1>
-                        <button className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full" onClick={() => toggleCreateTeamModal(!createTeamModal)}>
+                        <button className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full" onClick={() => toggleManageTeamModal(!manageTeamModal)}>
                             Create Team
                         </button>
                     </div>
                     {teams && !isLoading ? (
+                        teams.length > 0 &&
                         teams.map((team, i) => {
-                            return <TeamsCard team={team.attributes} key={i} leaveTeam={true} user={user} />;
+                            return <TeamsCard team={team.attributes} teamObject={team} key={i} leaveTeam={true} user={user} />;
                         })
                     ) : (
                         <h1>No Teams</h1>
@@ -100,7 +101,7 @@ export default function Profiles({ user, teams, isLoading, wallet, userObject })
 
             <div>
                 <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} userObject={userObject} />
-                <CreateTeam user={user} toggleModal={toggleCreateTeamModal} modalView={createTeamModal} />
+                <ManageTeam user={user} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} createNewTeam={true} />
             </div>
         </div>
     );
