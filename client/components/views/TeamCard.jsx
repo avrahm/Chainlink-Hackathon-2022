@@ -3,7 +3,7 @@ import { useWallet } from "../../context/WalletProvider";
 import { Photo } from "../Photo";
 import { ManageTeam } from "./ManageTeam";
 
-export const TeamsCard = ({ team, teamObject = null }) => {
+export const TeamCard = ({ team, teamObject = null }) => {
     const { user } = useWallet();
     const [manageTeamModal, toggleManageTeamModal] = useState(false);
     let isTeamMember = false;
@@ -40,14 +40,14 @@ export const TeamsCard = ({ team, teamObject = null }) => {
                 </div>
             </div>
             <div className="flex flex-row w-full items-center justify-around p-2">
-                {user && !isTeamMember && <button className="px-2 py-1 my-4 bg-green-200 rounded-full">Challenge</button>}
-                {user && isTeamMember && <button className="px-2 py-1 my-4 bg-red-200 rounded-full">Leave Team</button>}
+                {user && !isTeamMember && <button className="px-2 py-1 my-2 bg-green-200 rounded-full">Challenge</button>}
+                {user && isTeamMember && <button className="px-2 py-1 my-2 bg-red-200 rounded-full">Leave Team</button>}
                 {user && isAdmin && (
-                    <button className="px-2 py-1 my-4 bg-yellow-200 rounded-full" onClick={() => toggleManageTeamModal(!manageTeamModal)}>
+                    <button className="px-2 py-1 my-2 bg-yellow-200 rounded-full" onClick={() => toggleManageTeamModal(!manageTeamModal)}>
                         Manage Team
                     </button>
                 )}
-                <a href={`/team/${teamObject.id}`} className="px-2 py-1 my-4 bg-blue-400 rounded-full">
+                <a href={`/team/${teamObject.id}`} className="px-2 py-1 my-2 bg-blue-400 rounded-full">
                     View Team
                 </a>
             </div>
