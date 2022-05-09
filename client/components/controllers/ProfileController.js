@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useMoralisQuery, useNewMoralisObject } from "react-moralis";
 import Profile from "../views/Profile";
 
-export const ProfileController = ({ username, wallet = false }) => {
+export const ProfileController = ({ username, wallet = false, isCurrentUser = false }) => {
     const router = useRouter();
     const newUser = {
         username: username,
@@ -60,5 +60,5 @@ export const ProfileController = ({ username, wallet = false }) => {
             });
     }, []);
 
-    return <Profile user={userData} teams={teams} isLoading={isLoading} wallet={wallet} userObject={userObject} />;
+    return <Profile userData={userData} isCurrentUser={isCurrentUser} teams={teams} isLoading={isLoading} wallet={wallet} userObject={userObject} />;
 };

@@ -64,6 +64,7 @@ const WalletProvider = (props) => {
                 wallet,
                 user,
                 isAuthenticating,
+                isAuthenticated,
                 signOutWallet,
                 connectWallet,
             }}

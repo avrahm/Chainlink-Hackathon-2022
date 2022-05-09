@@ -27,6 +27,7 @@ export default function TeamPage({ team, teamIsLoading, wallet, teamObject }) {
                         <div className="flex flex-col w-1/2">
                             <span>{team.teamDisplayName ? team.teamDisplayName : "--"}</span>
                             <span>Member Since {team.createdAt ? team.createdAt.toLocaleDateString("en-US", { year: "numeric" }) : "--"}</span>
+                            <span>{team.teamDescription}</span>
                         </div>
                     </div>
                 </div>
@@ -80,9 +81,7 @@ export default function TeamPage({ team, teamIsLoading, wallet, teamObject }) {
                 <div className="flex flex-col my-4 w-full justify-around items-center border-2 border-emerald-400 p-2">
                     <div className="flex flex-col w-full justify-center py-3 items-center">
                         <h1>Members </h1>
-                        <div className="flex flex-wrap">
-                            {!teamIsLoading && <TeamMembersController members={team.teamMembers} team={team} teamIsLoading={teamIsLoading} />}
-                        </div>
+                        {!teamIsLoading && <TeamMembersController members={team.teamMembers} team={team} teamIsLoading={teamIsLoading} />}
                     </div>
                 </div>
             </div>

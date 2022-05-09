@@ -28,7 +28,7 @@ export const TeamMembersController = ({ members, team, teamIsLoading, wallet = f
     }, [teamIsLoading]);
 
     return (
-        <div>
+        <div className="flex flex-wrap">
             {teamMembers &&
                 teamMembers.map((member, i) => {
                     return <TeamMember key={i} member={member.attributes} isLoadingMembers={isLoading} memberObject={member} team={team} />;
