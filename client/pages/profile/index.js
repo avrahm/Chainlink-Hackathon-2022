@@ -12,7 +12,13 @@ export default function ProfilePage() {
                 <meta name="description" content="Player Profile" />
             </Head>
             {wallet && user && !isAuthenticating ? (
-                <ProfileController user={user} username={user.attributes.username} isAuthenticating={isAuthenticating} wallet={wallet} />
+                <ProfileController
+                    user={user}
+                    username={user.attributes.username}
+                    isAuthenticating={isAuthenticating}
+                    wallet={wallet}
+                    isCurrentUser={true}
+                />
             ) : (
                 <div className="flex flex-col justify-center items-center">
                     <p> No User Signed in</p>
