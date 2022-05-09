@@ -19,6 +19,8 @@ export const ManageTeam = ({ user, team = false, toggleModal, modalView, createN
     const [newSportInput, setNewSportInput] = useState("");
     const [teamSportsPreferences, setTeamSportsPreferences] = useState(team.teamSportsPreferences || []);
     const [isTeamActive, setisTeamActive] = useState(team.isTeamActive || false);
+    const [teamDescription, setTeamDescription] = useState(team.teamDescription || "");
+
     const [file, setFile] = useState(null);
     const toggleClass = " transform translate-x-6 bg-green-300";
 
@@ -28,6 +30,7 @@ export const ManageTeam = ({ user, team = false, toggleModal, modalView, createN
             teamSportsPreferences: teamSportsPreferences,
             teamAdmin: team.teamAdmin || user.username,
             teamMembers: team.teamMembers || [user.username],
+            teamDescription: teamDescription || "",
             isTeamActive: isTeamActive,
             ...newTeamObject,
         };
@@ -93,6 +96,17 @@ export const ManageTeam = ({ user, team = false, toggleModal, modalView, createN
                             ></div>
                         </div>
                     </div>
+                </div>
+                <div className="p-2">
+                    <span htmlFor="teamDescription">Description:</span>
+                    <textarea
+                        id="teamDescription"
+                        className="mx-3 px-2 py-1 rounded bg-gray-300"
+                        placeholder="Enter team description..."
+                        rows="3"
+                        value={teamDescription}
+                        onChange={(e) => setTeamDescription(e.target.value)}
+                    />
                 </div>
                 <div className="p-2">
                     <span htmlFor="sportsInput">Sports Preferences:</span>
