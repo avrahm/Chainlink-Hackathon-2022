@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function TeamsFilter({ filterTeams, isLoading }) {
     const [teamPOS, setTeamPOS] = useState(0);
@@ -26,7 +26,7 @@ export default function TeamsFilter({ filterTeams, isLoading }) {
         // filterTeams(filterBy, filterValue);
     };
 
-    const handleSubmit = () => {
+    const updateFilterValue = () => {
         switch (filterBy) {
             case "all":
                 setFilterBy("all");
@@ -44,8 +44,11 @@ export default function TeamsFilter({ filterTeams, isLoading }) {
                 setFilterValue("all");
                 break;
         }
-        filterTeams(filterBy, filterValue);
     };
+
+    useEffect(() => {
+        updateFilterValue();
+    }, [filterBy, teamPOS, sport]);
 
     return (
         <div className="flex flex-row items-center justify-around j w-[480px] lg:w-[600px]">
@@ -61,14 +64,19 @@ export default function TeamsFilter({ filterTeams, isLoading }) {
                     placeholder="Search"
                     onChange={(e) => setTeamPOS(e.target.value)}
                     value={teamPOS}
-                    className="w-[60px] ml-2 py-1 px-2"
+                    className="w-[60px] ml-2 py-1 px-2 disabled:bg-gray-300"
+                    disabled={filterBy !== "teamPOS"}
                 />
             </div>
 
             <div>
                 <input type="radio" className="m-2" name="filter" value="sport" onChange={() => handleChange("sport")} />
                 Sports:
-                <select className="w-[120px] ml-2 py-1 px-2" onChange={(e) => setSport(e.target.value)}>
+                <select
+                    disabled={filterBy !== "sport"}
+                    className="w-[120px] ml-2 py-1 px-2  disabled:bg-gray-300"
+                    onChange={(e) => setSport(e.target.value)}
+                >
                     <option value="all">All</option>
                     <option value="basketball">Basketball</option>
                     <option value="football">Football</option>
@@ -78,7 +86,7 @@ export default function TeamsFilter({ filterTeams, isLoading }) {
                 </select>
             </div>
 
-            <button onClick={() => handleSubmit()} disabled={isLoading} className="px-2 py-1 my-2 bg-green-200 rounded-full">
+            <button onClick={() => filterTeams(filterBy, filterValue)} disabled={isLoading} className="px-2 py-1 my-2 bg-green-200 rounded-full">
                 Apply
             </button>
         </div>
