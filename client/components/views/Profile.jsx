@@ -71,7 +71,7 @@ export default function Profiles({ user, teams, isLoading, wallet, userObject })
                             Create Team
                         </button>
                     </div>
-                    <div>
+                    <div className="w-full">
                         {teams && !isLoading ? (
                             teams.length > 0 &&
                             teams.map((team, i) => {

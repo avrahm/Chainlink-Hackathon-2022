@@ -5,9 +5,9 @@ export const TeamMember = ({ member, isLoadingMembers, memberObject = null, team
     const { user } = useWallet();
 
     return (
-        <div className="flex flex-col my-4 w-full justify-center items-start border-2 border-emerald-400 p-2">
+        <div className="flex flex-col m-2 justify-center items-start border-2 border-emerald-400 p-2">
             <div className="flex flex-row ">
-                <div className="flex flex-col w-full items-center justify-center p-2">
+                <div className="flex flex-col items-center justify-center p-2">
                     <Photo src={member.userPhoto} alt={member.userDisplayName} size="sm" type="profile" isLoading={isLoadingMembers} />
                     <span className="py-1"> {member.userDisplayName}</span>
                     <span className="py-1 text-xs">
