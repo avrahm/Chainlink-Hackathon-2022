@@ -5,22 +5,16 @@ import headerLogo from "../../public/header_logo.png";
 import styles from "../../styles/Home.module.css";
 
 export default function Navbar() {
-    const { connectWallet, wallet, signOutWallet, isAuthenticating } = useWallet();
+    const { connectWallet, wallet, signOutWallet, isAuthenticating, isAuthenticated } = useWallet();
 
     return (
         <div className={styles.nav}>
             <div>
                 <Image src={headerLogo} alt="SportsVybe Logo" width={120} height={30} />
             </div>
-
             <div className="px-4">
                 <Link href="/" className="px-2">
                     Home
-                </Link>
-            </div>
-            <div className="px-4">
-                <Link href="/profile" className="px-2">
-                    Profile
                 </Link>
             </div>
             <div className="px-4">
@@ -28,6 +22,20 @@ export default function Navbar() {
                     Teams
                 </Link>
             </div>
+            {isAuthenticated && (
+                <>
+                    <div className="px-4">
+                        <Link href="/profile" className="px-2">
+                            Profile
+                        </Link>
+                    </div>
+                    <div className="px-4">
+                        <Link href="/challenges" className="px-2">
+                            Challenges
+                        </Link>
+                    </div>
+                </>
+            )}
             <div className="px-4">
                 {wallet ? (
                     <button
