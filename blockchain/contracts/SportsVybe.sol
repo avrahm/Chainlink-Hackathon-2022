@@ -10,7 +10,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 */
 
 //Errors
-error FailedEventCreation(uint);
+error FailedEventCreation_DuplicateTeam(uint);
+error NotFound(uint);
+error FailedEventCreation_ChallengePoolClosed(uint);
+
 error NotFoundMembershipRequest(uint, address);
 error FailedEventCreation_InsufficientBalance(uint, uint);
 error sendTeamMembershipRequest_Unauthorized(uint, address);
@@ -61,7 +64,7 @@ contract SportsVybe is Ownable {
     mapping (uint => uint) teamCount;
 
 
-    constructor(address _sportsVybeToken) public {
+    constructor (address _sportsVybeToken) public {
         sportsVybeToken = IERC20(_sportsVybeToken);
     }
 
@@ -122,15 +125,15 @@ contract SportsVybe is Ownable {
 
     }
 
-    function hh() public returns(address) {
-       return team_membership_request[0][0].user;
-    }
+    // function hh() public returns(address) {
+    //    return team_membership_request[0][0].user;
+    // }
 
-    function getTeamMate(uint team_id) public returns(TeamMate[] memory) {
+    function getTeamMate(uint team_id) view public returns(TeamMate[] memory)  {
       return teamMembers[team_id];
     }
 
-    function getTeamCount(uint team_id) external returns(uint) {
+    function getTeamCount(uint team_id) view external returns(uint) {
 
       return  teamCount[team_id];
        
@@ -143,13 +146,20 @@ contract SportsVybe is Ownable {
     */
     function joinChallengePool(uint challenge_id) external payable returns (bool)  {
      
-     //Ensure that a new team is joinin the challenge
+     //TODO:Ensure that the Challenge exist
+     
+
+     //Ensure that the Challenge is still open
+     if(challengePools[challenge_id].isClosed == true){
+       revert FailedEventCreation_ChallengePoolClosed(challenge_id);
+     }
+
+     //Ensure that the new team joinin the challenge is not creator
      if(challengePools[challenge_id].team1 == msg.sender){
-       revert FailedEventCreation(challenge_id);
+       revert FailedEventCreation_DuplicateTeam(challenge_id);
      }
 
      //Ensure that the new team has sufficient balance to join the challenge
-
      if(msg.value < challengePools[challenge_id].amount){
         revert FailedEventCreation_InsufficientBalance(challenge_id,msg.value);
      }
@@ -160,6 +170,8 @@ contract SportsVybe is Ownable {
      challengePools[challenge_id].team2 = msg.sender;
      
      emit EventCreated(challenge_id, challengePools[challenge_id].team1, msg.sender );
+      
+      return true;
 
     }
 
