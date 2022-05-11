@@ -54,7 +54,7 @@ export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
                 <div>Edit Profile</div>
 
                 <div className="p-2">
-                    {user.newUser && <span className="py-2 text-red-400">Please complete profile:</span>}
+                    {user && user.newUser && <span className="py-2 text-red-400">Please complete profile:</span>}
                     {error && <span className="py-2">Upload Error: {error}</span>}
                 </div>
 
