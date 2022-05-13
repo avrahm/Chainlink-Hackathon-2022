@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useWallet } from "../../context/WalletProvider";
 import { Photo } from "../Photo";
 import { EditProfile } from "./EditProfile";
+import { ManageTeam } from "./ManageTeam";
 import { TeamCard } from "./TeamCard";
 
 export default function Profiles({ userData, teams, isCurrentUser = false, isLoading = false, wallet, userObject }) {
     const { user, isAuthenticated, connectWallet, isAuthenticating } = useWallet();
     const [editProfileModal, toggleEditProfileModal] = useState(false);
+    const [manageTeamModal, toggleManageTeamModal] = useState(false);
 
     return (
         <div className="flex flex-col justify-center items-center">
@@ -107,6 +109,8 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
             </div>
 
             <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} userObject={userObject} />
+
+            <ManageTeam user={user} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} createNewTeam={true} />
         </div>
     );
 }
