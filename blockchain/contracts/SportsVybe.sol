@@ -35,15 +35,15 @@ contract SportsVybe is Ownable {
 
 
     struct ChallengePool{
-        address team1;
-        address team2; 
+        uint team1;
+        uint team2; 
         uint256 amount;
         bool isClosed; 
         bool isCompleted;
     }
     
     //emit this event when ever a team joins a challenge
-    event EventCreated(uint challenge_id, address team1, address team2);
+    event EventCreated(uint challenge_id, uint team1, uint team2);
     event ChallengePoolCreated(uint challenge_id, uint amount);
     event NewTeamMate(uint team_id, address user);
     event MembershipRequestSent(uint team_id);
@@ -58,7 +58,10 @@ contract SportsVybe is Ownable {
     */
     mapping(address => uint256) public sportsmanship; //the sportsmanship of each users
     
-    mapping (uint => TeamMate[]) team_membership_request;
+    mapping (uint => TeamMate[]) public team_membership_request;
+    mapping (uint => address) public team_owner;
+    mapping (uint => uint) public team_sportsmanship;
+
 
     mapping (uint => TeamMate[]) teamMembers;
     mapping (uint => uint) teamCount;
@@ -72,15 +75,21 @@ contract SportsVybe is Ownable {
 
       teams.push(Team(_name, msg.sender,_game)) ;
 
-      uint id = teams.length - 1;
+      uint team_id = teams.length - 1;
 
-      return id;
+      team_owner[team_id] = msg.sender;
+
+      teamCount[team_id] = 1;
+
+      team_sportsmanship[team_id] = 100;
+
+      return team_id;
 
     }
 
-    function createChallengePool(uint amount) external newSportsmanship (msg.sender) returns (uint) {
+    function createChallengePool(uint team_id, uint amount) external newSportsmanship (msg.sender) returns (uint) {
 
-       challengePools.push(ChallengePool(msg.sender, msg.sender ,amount,false,false));
+       challengePools.push(ChallengePool(team_id, 0 ,amount,false,false));
        
        uint id = challengePools.length - 1;
 
@@ -121,6 +130,8 @@ contract SportsVybe is Ownable {
 
       teamMembers[team_id].push(TeamMate(msg.sender));
       teamCount[team_id] = teamCount[team_id] + 1;
+      team_sportsmanship[team_id] = 100;
+
       emit NewTeamMate(team_id, msg.sender);
 
     }
@@ -144,7 +155,7 @@ contract SportsVybe is Ownable {
       @params: challenge_id -The challenge pool id
       @returns: bool
     */
-    function joinChallengePool(uint challenge_id) external payable returns (bool)  {
+    function joinChallengePool(uint team_id, uint challenge_id) external payable returns (bool)  {
      
      //TODO:Ensure that the Challenge exist
      
@@ -155,7 +166,7 @@ contract SportsVybe is Ownable {
      }
 
      //Ensure that the new team joinin the challenge is not creator
-     if(challengePools[challenge_id].team1 == msg.sender){
+     if(team_owner[team_id] == msg.sender){
        revert FailedEventCreation_DuplicateTeam(challenge_id);
      }
 
@@ -167,9 +178,9 @@ contract SportsVybe is Ownable {
      //move ether to sportsVybe Token contract
      sportsVybeToken.transfer(msg.sender, challengePools[challenge_id].amount);
 
-     challengePools[challenge_id].team2 = msg.sender;
+     challengePools[challenge_id].team2 = team_id;
      
-     emit EventCreated(challenge_id, challengePools[challenge_id].team1, msg.sender );
+     emit EventCreated(challenge_id, challengePools[challenge_id].team1, challengePools[challenge_id].team2 );
       
       return true;
 
@@ -184,8 +195,8 @@ contract SportsVybe is Ownable {
       @params: id -The team's ID
       @returns: uint
     */
-    function getTeamSportsmanship(uint id) public returns ( uint){
-
+    function getTeamSportsmanship(uint team_id) public returns ( uint){
+       return team_sportsmanship[team_id] / teamCount[team_id];
     }
 
 
