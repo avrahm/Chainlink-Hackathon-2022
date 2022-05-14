@@ -9,25 +9,33 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 @Description: SportsVybe 
 */
 
+//TODO: use chainlink VRF for uquiue Identifier -> Challenge, Team
+
 //Errors
 error FailedEventCreation_DuplicateTeam(uint);
 error NotFound(uint);
 error FailedEventCreation_ChallengePoolClosed(uint);
+error NotAllowed(uint, uint);
+error Unauthorized(uint);
+error InsufficientBalance(uint,uint);
+
 
 error NotFoundMembershipRequest(uint, address);
 error FailedEventCreation_InsufficientBalance(uint, uint);
 error sendTeamMembershipRequest_Unauthorized(uint, address);
+error ChallengePoolCreation_Unauthorized(uint);
 
 
 contract SportsVybe is Ownable {
 
     IERC20 public sportsVybeToken;
 
-    struct Team{
-        string name; //The name of the team
-        address owner; //The team creator, 
-        string game; // e.g: football, tennis,
-    }
+    //Remove Game
+    // struct Team{
+    //     string name; //The name of the team
+    //     address owner; //The team creator, 
+    //     string game; // e.g: football, tennis,
+    // }
 
     struct TeamMate{
         address user; //The name of the team
@@ -44,11 +52,11 @@ contract SportsVybe is Ownable {
     
     //emit this event when ever a team joins a challenge
     event EventCreated(uint challenge_id, uint team1, uint team2);
-    event ChallengePoolCreated(uint challenge_id, uint amount);
+    event ChallengePoolCreated(uint challenge_id, uint amount, uint team_id, uint challenged_team_id);
     event NewTeamMate(uint team_id, address user);
     event MembershipRequestSent(uint team_id);
 
-    Team[] public teams; //List of all the teams on chain
+    ///Team[] public teams; //List of all the teams on chain
     ChallengePool[] public challengePools; //List of all the teams on chain
 
     /*
@@ -61,39 +69,93 @@ contract SportsVybe is Ownable {
     mapping (uint => TeamMate[]) public team_membership_request;
     mapping (uint => address) public team_owner;
     mapping (uint => uint) public team_sportsmanship;
+    mapping (uint => uint) public challenged_team_pool;
 
 
     mapping (uint => TeamMate[]) teamMembers;
     mapping (uint => uint) teamCount;
+
+    uint team_id = 0;
 
 
     constructor (address _sportsVybeToken) public {
         sportsVybeToken = IERC20(_sportsVybeToken);
     }
 
-    function createTeam (string memory _name, string memory _game) external returns (uint) {
+    function createTeam () external newSportsmanship (msg.sender) returns (uint) {
 
-      teams.push(Team(_name, msg.sender,_game)) ;
+      //teams.push(Team(_name, msg.sender,_game)) ;
 
-      uint team_id = teams.length - 1;
+      //uint team_id = teams.length - 1;
 
-      team_owner[team_id] = msg.sender;
+      uint _team_id = team_id+1;
 
-      teamCount[team_id] = 1;
+      team_owner[_team_id] = msg.sender;
 
-      team_sportsmanship[team_id] = 100;
+      teamCount[_team_id] = 1;
 
-      return team_id;
+      team_sportsmanship[_team_id] = 100;
+
+      return _team_id;
 
     }
 
-    function createChallengePool(uint team_id, uint amount) external newSportsmanship (msg.sender) returns (uint) {
+    function delineChallenge(uint challenge_id, uint team_id) external returns(bool){
+       //The challenged_team can reject the challenge
 
-       challengePools.push(ChallengePool(team_id, 0 ,amount,false,false));
+
+       //Time bond(lock)
+
        
+    }
+
+    function acceptChallenge(uint challenge_id,uint team_id) external payable returns(bool){
+       //Ensure msg.sender is the owner of the team
+       if(team_owner[team_id] != msg.sender){
+         revert Unauthorized(team_id);
+       }
+
+       //Ensure that team id has been challenged to participate in the challenge pool
+       if(challenged_team_pool[challenge_id] == team_id){
+         revert NotAllowed(challenge_id, team_id);
+       }
+
+       //Ensure the team owner has the required amount for participation
+       uint challenge_amount = challengePools[challenge_id].amount;
+       if(msg.value >= challenge_amount){
+          revert InsufficientBalance(challenge_id,challenge_amount);
+       }
+
+       //Receive SVT token of the challenge
+       sportsVybeToken.transfer(msg.sender, challenge_amount);
+
+       challengePools[challenge_id].team2 = team_id;
+     
+       emit EventCreated(challenge_id, challengePools[challenge_id].team1, challengePools[challenge_id].team2 );
+      
+      return true;
+
+
+       //emit event created
+
+    }
+
+    function createChallengePool(uint team_id, uint challenged_team_id, uint amount) external newSportsmanship (msg.sender) returns (uint) {
+
+       //Ensure that team belongs to msg.sender
+    
+       if(team_owner[team_id] != msg.sender){
+         revert ChallengePoolCreation_Unauthorized(team_id);
+       }
+
+       challengePools.push(ChallengePool(team_id, challenged_team_id ,amount,false,false));
        uint id = challengePools.length - 1;
 
-       emit ChallengePoolCreated(id, amount);
+       //the challenged team
+       challenged_team_pool[id] = challenged_team_id;
+
+
+       emit ChallengePoolCreated(id, amount, team_id, challenged_team_id);
        
        return id;
 
@@ -103,7 +165,7 @@ contract SportsVybe is Ownable {
       //TODO: Check if team members reached max for the game
 
       //ENSURE that the team belongs to msg.sender
-      if(teams[team_id].owner != msg.sender){
+      if(team_owner[team_id] != msg.sender){
         revert sendTeamMembershipRequest_Unauthorized(team_id, user);
       }
 
@@ -112,6 +174,7 @@ contract SportsVybe is Ownable {
       return true;
        
     }
+
 
     function acceptMembershipTeamRequest(uint team_id) public newSportsmanship (msg.sender){
       
@@ -130,7 +193,7 @@ contract SportsVybe is Ownable {
 
       teamMembers[team_id].push(TeamMate(msg.sender));
       teamCount[team_id] = teamCount[team_id] + 1;
-      team_sportsmanship[team_id] = 100;
+      team_sportsmanship[team_id] = team_sportsmanship[team_id] + 100;
 
       emit NewTeamMate(team_id, msg.sender);
 
@@ -196,7 +259,9 @@ contract SportsVybe is Ownable {
       @returns: uint
     */
     function getTeamSportsmanship(uint team_id) public returns ( uint){
-       return team_sportsmanship[team_id] / teamCount[team_id];
+      
+      return team_sportsmanship[team_id] / teamCount[team_id];
+
     }
 
 
