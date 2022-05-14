@@ -100,11 +100,25 @@ contract SportsVybe is Ownable {
 
     }
 
+    //TODO: Time bond(lock)
+
     function delineChallenge(uint challenge_id, uint team_id) external returns(bool){
-       //The challenged_team can reject the challenge
+
+ 
+      ChallengePool memory _challenge_pool = challengePools[challenge_id];
+
+      //close the challenge
+      _challenge_pool.isClosed = true;
+
+      //team owner
+      address _owner = team_owner[_challenge_pool.team1];
+
+      //move ether back to the challenge pool creator
+      sportsVybeToken.transfer(_owner, _challenge_pool.amount);
 
 
-       //Time bond(lock)
+
+      
 
        
     }
