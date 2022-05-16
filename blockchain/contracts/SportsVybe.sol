@@ -51,6 +51,8 @@ contract SportsVybe is Ownable {
     }
     
     //emit this event when ever a team joins a challenge
+    event TeamCreated(uint team_id);
+
     event EventCreated(uint challenge_id, uint team1, uint team2);
     event ChallengePoolCreated(uint challenge_id, uint amount, uint team_id, uint challenged_team_id);
     event NewTeamMate(uint team_id, address user);
@@ -95,7 +97,7 @@ contract SportsVybe is Ownable {
       teamCount[_team_id] = 1;
 
       team_sportsmanship[_team_id] = 100;
-
+      emit TeamCreated(_team_id);
       return _team_id;
 
     }
