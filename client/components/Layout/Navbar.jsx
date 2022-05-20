@@ -21,6 +21,11 @@ export default function Navbar() {
                     Teams
                 </Link>
             </div>
+            <div className="px-4">
+                <Link href="/event" className="px-2">
+                    Event
+                </Link>
+            </div>
             {isAuthenticated && (
                 <>
                     <div className="px-4">
