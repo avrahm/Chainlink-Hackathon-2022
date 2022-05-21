@@ -24,6 +24,7 @@ const WalletProvider = (props) => {
                 if (account) {
                     setWallet(account.get("ethAddress"));
                     routeToProfile && router.push("/profile");
+                    !routeToProfile && router.reload();
                 }
                 if (wallet) console.log("connected", account, account.get("ethAddress"));
             }

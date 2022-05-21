@@ -108,9 +108,9 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
                 </div>
             </div>
 
-            <EditProfile user={user} toggleModal={toggleEditProfileModal} modalView={editProfileModal} userObject={userObject} />
+            <EditProfile user={userData} toggleModal={toggleEditProfileModal} modalView={editProfileModal} userObject={userObject} />
 
-            <ManageTeam user={user} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} createNewTeam={true} />
+            <ManageTeam user={userData} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} createNewTeam={true} />
         </div>
     );
 }

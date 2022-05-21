@@ -9,8 +9,10 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@ethersproject/bignumber": "^5.6.1",
         "@walletconnect/web3-provider": "^1.7.8",
         "@web3auth/web3auth": "^0.9.3",
+        "ethers": "^5.6.6",
         "magic-sdk": "^8.1.1",
         "moralis": "^1.6.0",
         "next": "12.1.5",

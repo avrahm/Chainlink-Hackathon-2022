@@ -99,7 +99,6 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
       //teams.push(Team(_name, msg.sender,_game)) ;
 
       //uint team_id = teams.length - 1;
-
       uint _team_id = team_id+1;
 
       team_owner[_team_id] = msg.sender;
@@ -108,6 +107,9 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
 
       team_sportsmanship[_team_id] = 100;
       emit TeamCreated(_team_id);
+      
+      //increment the team id
+      team_id++;
       return _team_id;
 
     }

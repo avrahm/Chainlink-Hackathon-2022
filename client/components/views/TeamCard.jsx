@@ -21,7 +21,7 @@ export const TeamCard = ({ team, teamObject = null }) => {
                 <div className="flex flex-col w-1/2 items-center justify-center p-2">
                     <Photo src={team.teamPhoto} alt={team.teamDisplayName} size="sm" type="team" isLoading={false} />
                     <span>{team.teamName}</span>
-                    <span>{team.teamPOS ? `${team.teamPOS}% ` : "100%"} POS</span>
+                    <span>{team.teamPOS ? `${team.teamPOS}%` : "100%"} POS</span>
                 </div>
                 <div className="flex flex-col w-1/2 items-center p-2">
                     <div className="flex flex-col justify-center items-center">
@@ -40,8 +40,16 @@ export const TeamCard = ({ team, teamObject = null }) => {
                 </div>
             </div>
             <div className="flex flex-row w-full items-center justify-around p-2">
-                {user && !isTeamMember && <button className="px-2 py-1 my-2 bg-green-200 rounded-full">Challenge</button>}
-                {user && isTeamMember && <button className="px-2 py-1 my-2 bg-red-200 rounded-full">Leave Team</button>}
+                {user && !isTeamMember && (
+                    <button className="px-2 py-1 my-2 bg-green-200 rounded-full" onClick={() => alert("Challenge Team")}>
+                        Challenge Team
+                    </button>
+                )}
+                {user && isTeamMember && !isAdmin && (
+                    <button className="px-2 py-1 my-2 bg-red-200 rounded-full" onClick={() => alert("Leave Team")}>
+                        Leave Team
+                    </button>
+                )}
                 {user && isAdmin && (
                     <button className="px-2 py-1 my-2 bg-yellow-200 rounded-full" onClick={() => toggleManageTeamModal(!manageTeamModal)}>
                         Manage Team
@@ -51,7 +59,9 @@ export const TeamCard = ({ team, teamObject = null }) => {
                     View Team
                 </a>
             </div>
-            <ManageTeam user={user} team={team} teamObject={teamObject} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} />
+            {user && isAdmin && (
+                <ManageTeam user={user} team={team} teamObject={teamObject} toggleModal={toggleManageTeamModal} modalView={manageTeamModal} />
+            )}
         </div>
     );
 };
