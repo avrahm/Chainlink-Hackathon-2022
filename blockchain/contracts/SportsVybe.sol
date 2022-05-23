@@ -16,12 +16,13 @@ import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 error FailedEventCreation_DuplicateTeam(uint);
 error NotFound(uint);
 error FailedEventCreation_ChallengePoolClosed(uint);
-error NotAllowed(uint, uint);
+error NotAllowed_For_Challenge(uint, uint);
 error Unauthorized(uint);
 error Team_Unauthorized(uint);
 error InsufficientBalance(uint,uint);
 error Vote_Unauthorized(uint);
-
+error Duplicate_Vote(uint);
+error Invalid_Team(uint);
 
 
 error NotFoundMembershipRequest(uint, address);
@@ -45,6 +46,9 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
         address user; //The name of the team
     }
 
+    struct ChallengeVote{
+        uint challenge_id;
+    }
 
     struct ChallengePool{
         uint team1;
@@ -54,6 +58,8 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
         bool isCompleted;
         uint createdAt;
         uint interval;
+        uint team1_count;
+        uint team2_count;  
     }
     
     //emit this event when ever a team joins a challenge
@@ -66,25 +72,35 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
     event MembershipRequestSent(uint team_id);
 
     ///Team[] public teams; //List of all the teams on chain
-    ChallengePool[] public challengePools; //List of all the teams on chain
+    //ChallengePool[] public challengePools; //List of all the teams on chain
+
+
 
     /*
       Cases for sportmanship reduction
       1. Did not show up for a challege
      
     */
+    mapping (address => ChallengeVote[]) votes;
+
     mapping(address => uint256) public sportsmanship; //the sportsmanship of each users
     mapping (uint => TeamMate[]) public team_membership_request;
     mapping (uint => address) public team_owner;
     mapping (uint => uint) public team_sportsmanship;
-    mapping (uint => uint) public challenged_team_pool;
-    mapping (uint => TeamMate[]) teamMembers;
-    mapping (uint => uint) teamCount;
-    mapping (uint => address[] )  challengPoolTeamMembers;
-    mapping (uint => uint )  challengPoolVote;
+    //mapping (uint => uint) public challenged_team_pool;
+   // mapping (uint => TeamMate[]) teamMembers;
+    mapping (uint => uint) public teamCount;
+    mapping (uint => address[] ) public  teamMembers;
+    mapping (uint => uint ) public challengPoolVote;
+    mapping (uint => ChallengePool) public challengePools;
+    mapping (uint => address[]) public challengPoolTeamMembers;
+
+    uint[] public pending_challenge_pool_ids;
 
 
     uint team_id = 0;
+
+    uint new_challenge_id = 889;
 
     uint counter = 0;
 
@@ -149,14 +165,15 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
       teamOwner(team_id) 
       external payable 
       returns(bool) {
-       //Ensure msg.sender is the owner of the team
+
+      //Ensure msg.sender is the owner of the team
       //  if(team_owner[team_id] != msg.sender){
       //    revert Unauthorized(team_id);
       //  }
 
        //Ensure that team id has been challenged to participate in the challenge pool
-       if(challenged_team_pool[challenge_id] == team_id){
-         revert NotAllowed(challenge_id, team_id);
+       if(challengePools[challenge_id].team2 != team_id){
+         revert NotAllowed_For_Challenge(challenge_id, team_id);
        }
 
        //Ensure the team owner has the required amount for participation
@@ -166,7 +183,7 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
        }
 
        //Receive SVT token of the challenge
-       sportsVybeToken.transfer(msg.sender, challenge_amount);
+       //sportsVybeToken.transfer(address(this), challenge_amount);
 
        challengePools[challenge_id].team2 = team_id;
      
@@ -182,29 +199,47 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
     function createChallengePool(
        uint team_id, 
        uint challenged_team_id, 
-       uint amount) external 
+       uint amount) public payable
        newSportsmanship () 
        teamOwner(team_id) 
        returns (uint) {
 
        uint _interval = 5;
-       challengePools.push(ChallengePool(
+       uint id = new_challenge_id;
+       challengePools[id] = ChallengePool(
          team_id, 
          challenged_team_id,
          amount,
          false,
          false,
          block.timestamp,
-         _interval
-        ));
-       uint id = challengePools.length - 1;
+         _interval,
+         0,
+         0
+         
+        );
+
+      //TODO: Ensure that team owned by team owner cannot compeet with it self. 
+      //Ensure that team owner has  funds to create challenge
+      // if(amount >= msg.value ){
+      //   revert InsufficientBalance(0,amount);
+      // }
+
+      //move funds to smart contract
+      //sportsVybeToken.transfer(address(this),amount);
+
+      pending_challenge_pool_ids.push(id);
+
+     //create variable and increment id
+      new_challenge_id += 1;
+
+     
 
        //the challenged team
-       challenged_team_pool[id] = challenged_team_id;
+       //challenged_team_pool[new_challenge_id] = challenged_team_id;
 
-
-       emit ChallengePoolCreated(id, amount, team_id, challenged_team_id);
        
+       emit ChallengePoolCreated(id, amount, team_id, challenged_team_id);
        return id;
 
     }
@@ -243,7 +278,7 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
       }
 
 
-      teamMembers[team_id].push(TeamMate(msg.sender));
+      teamMembers[team_id].push(msg.sender);
       teamCount[team_id] = teamCount[team_id] + 1;
       team_sportsmanship[team_id] = team_sportsmanship[team_id] + 100;
 
@@ -256,7 +291,7 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
     // }
 
     function getTeamMate(uint team_id) view public 
-      returns(TeamMate[] memory)  {
+      returns(address[] memory)  {
       return teamMembers[team_id];
     }
 
@@ -320,47 +355,105 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
 
     }
 
-    function voteForWinner(uint challenge_id) external returns(bool){
-      ChallengePool memory _challenge_pool = challengePools[challenge_id];
+    function increaseVoteFor(uint challenge_id, uint team_id) public  returns ( uint) {
+        ChallengeVote[] memory _address_votes  = votes[msg.sender];
+        for(uint i =0; i < _address_votes.length; i++ ){
+            //lookup for the challenge
+            if(_address_votes[i].challenge_id == challenge_id){
+                //revert, Already voted!
+                revert Duplicate_Vote(challenge_id);
+            }
+        }
 
-      address[] memory members = challengPoolTeamMembers[_challenge_pool.team1];
-       //Vote must be casted by members of the team in the challenge
-      bool is_member = false;
-      for (uint i=0; i < members.length; i++) {
-          if (msg.sender == members[i]) {
-              is_member = true;
-          }
-      }
+        //increase vote count for team ID
+        if(challengePools[challenge_id].team1 == team_id){
+          challengePools[challenge_id].team1_count +=1;
+        }else if(challengePools[challenge_id].team2 == team_id){
+          challengePools[challenge_id].team1_count +=1;
+        }else{
+          revert Invalid_Team(team_id);
+        }
 
-      if(is_member != true){
-         revert Vote_Unauthorized(challenge_id);
-      }
-
-      //TODO: check if msg.sender has cast a vote   
-     
+      //=======check if it's due to give out reward========
+      //team a -> 2
+      //team b -> 2
+      //total -> 3
+      //vote team a = 3
+      //vote team b = 1
       
-      //Timelock the reward if a team's vote exceeds the total number of player from both team(TNP)/2
-      //Giveout reward after Timelock expiration
-      challengPoolVote[challenge_id] += 1;
-
-      if(challengPoolVote[challenge_id] == (challengPoolTeamMembers[challenge_id].length/2 )) {
+      uint totalchallengPoolVote = challengePools[challenge_id].team1_count + challengePools[challenge_id].team2_count;
+      
+      if(totalchallengPoolVote == (challengPoolTeamMembers[challenge_id].length/2 )) {
         //Reduce their sportmansip.
         //Give back the challenge reward to team owner
+        address team_1_owner = team_owner[challengePools[challenge_id].team1];
+        address team_2_owner = team_owner[challengePools[challenge_id].team2];
+
+        //sportsVybeToken.transfer(team_1_owner, challengePools[challenge_id].amount/2);
+       // sportsVybeToken.transfer(team_2_owner, challengePools[challenge_id].amount/2);
+
+        challengePools[challenge_id].isClosed = true;
+        emit ChallengePoolClosed(challenge_id);
+        return 0;
       }
 
-      if(challengPoolVote[challenge_id] > challengPoolTeamMembers[challenge_id].length/2 ) {
+      if(totalchallengPoolVote > challengPoolTeamMembers[challenge_id].length/2 ) {
         //Give team owner their reward.
-      }
 
+        //check for winner
+        uint winner;
+        if(challengePools[challenge_id].team1_count > challengePools[challenge_id].team1_count){
+            winner = challengePools[challenge_id].team1;
+        }else{
+            winner = challengePools[challenge_id].team2;
+        }
+
+        //move ether back to the challenge pool creator
+        //sportsVybeToken.transfer(team_owner[winner], challengePools[challenge_id].amount);
+        challengePools[challenge_id].isClosed = true;
+        emit ChallengePoolClosed(challenge_id);
+        return winner;
+
+      }  
+
+      return 0;
 
     }
 
- 
+    // function voteForWinner(uint challenge_id) external returns(bool){
+    //   ChallengePool memory _challenge_pool = challengePools[challenge_id];
+
+    //   address[] memory teamA = teamMembers[_challenge_pool.team1];
+    //   address[] memory teamB = teamMembers[_challenge_pool.team2];
+      
+    //   //address[] memory members = challengPoolTeamMembers[_challenge_pool.team1];
+    //   //Vote must be casted by members of the team in the challenge
+    //   bool is_member = false;
+    //   for (uint i=0; i < teamA.length; i++) {
+    //       if (msg.sender == teamA[i] || msg.sender == teamB[i] ) {
+    //           is_member = true;
+    //       }
+    //   }
+
+    //   if(is_member != true){
+    //      revert Vote_Unauthorized(challenge_id);
+    //   }
+
+    //   //TODO: check if msg.sender has cast a vote   
+     
+      
+    //   //Timelock the reward if a team's vote exceeds the total number of player from both team(TNP)/2
+    //   //Giveout reward after Timelock expiration
+    //   challengPoolVote[challenge_id] += 1;
+
+
+    // } 
 
     function checkUpkeep(bytes calldata /* checkData */) external view override returns (bool upkeepNeeded, bytes memory  performData ) {
-      
-       for(uint i = 0; i < challengePools.length; i++){
-          upkeepNeeded = challengePools[i].createdAt + challengePools[i].interval > block.timestamp;
+       //TODO: Only check open challenge pool
+       for(uint i = 0; i < pending_challenge_pool_ids.length; i++){
+          
+          upkeepNeeded = challengePools[pending_challenge_pool_ids[i]].createdAt + challengePools[pending_challenge_pool_ids[i]].interval > block.timestamp;
           performData = abi.encode(i);
        }
       //upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
@@ -377,7 +470,6 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
         }
         // We don't use the performData in this example. The performData is generated by the Keeper's call to your checkUpkeep function
     }
-
 
     modifier newSportsmanship(){
       if(sportsmanship[msg.sender] == 0){
