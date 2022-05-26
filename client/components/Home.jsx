@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css";
 export const Home = () => {
   return (
     <div>
-      <div className="flex items-center justify-center">
+      <div className="flex-col md:flex-row flex md:items-center md:justify-center">
         <div>
           <h1 className="text-7xl mb-5 font-semibold">
             <span className="text-green-500 pt-10">Sports</span>Vybe
@@ -42,8 +42,8 @@ export const Home = () => {
         </h4>
       </div>
       <section className=" mt-10">
-        <div className="flex md:flex-row flex-col justify-around">
-          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
+        <div className="flex md:flex-row flex-col md:justify-around ">
+          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out ">
             <img
               className="rounded-t-xl"
               src="https://media.istockphoto.com/photos/ball-is-connecting-us-picture-id1085308182?k=20&m=1085308182&s=612x612&w=0&h=9OA_mFvT2KiiiEKqcpi1A29ogXAFk28lKjwua3_e0bI="
@@ -68,15 +68,14 @@ export const Home = () => {
             </div>
           </div>
           <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
-            <img
-              className="rounded-t-xl"
-              src="/AM.PNG"
-              alt=""
-            />
+            <img className="rounded-t-xl" src="/AM.PNG" alt="" />
             <div className="pt-4 px-4 pb-12">
-              <p className="font-bold text-base py-2">Get active and win Challenges!</p>
+              <p className="font-bold text-base py-2">
+                Get active and win Challenges!
+              </p>
               <p>
-                Connect & challenge with several other users/teams, win and earn rewards from these challenges
+                Connect & challenge with several other users/teams, win and earn
+                rewards from challenges!
               </p>
             </div>
           </div>
