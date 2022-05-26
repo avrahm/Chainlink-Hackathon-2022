@@ -36,7 +36,7 @@ export const Home = () => {
         <h2 className="text-center text-3xl text-semibold mt-16">
           How SPORTS<span className="text-green-500">VYBE</span> works:
         </h2>
-        <h4 className=" text-center mt-2 text-lg">
+        <h4 className=" text-center mt-2 text-md">
           Our Mission is to improve the health in our community through fitness
           and sociability.
         </h4>
@@ -76,7 +76,7 @@ export const Home = () => {
             <div className="pt-4 px-4 pb-12">
               <p className="font-bold text-base py-2">Get active and win Challenges!</p>
               <p>
-                Connect & compete with several other teams, win and earn rewards from challenges
+                Connect & challenge with several other users/teams, win and earn rewards from these challenges
               </p>
             </div>
           </div>
