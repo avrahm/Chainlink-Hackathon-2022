@@ -82,7 +82,58 @@ export const Home = () => {
         </div>
       </section>
       <div className="mt-20">
-        <h1 className="text-3xl">Basic Features</h1>
+        <h1 className="text-3xl mb-2">
+          Basic Features of <span className="text-green-500 ">Sports</span>vybe
+        </h1>
+        <p className="mb-5 text-bold text-gray-500">
+          With over 200 parks and local venues we are add more everyday.
+        </p>
+        <div className="flex align-center my-3">
+          <img
+            src="/check-mark.png"
+            alt=""
+            className="h-5 rounded-full mr-3 mt-1"
+          />
+          <p className="text-md">
+            FitFeed: The feed will display upcoming events, recent check-ins,
+            facilities and events based on your preferences.
+          </p>
+        </div>
+        <div className="flex align-center my-3">
+          <img
+            src="/check-mark.png"
+            alt=""
+            className="h-5 rounded-full mr-3 mt-1"
+          />
+          <p className="text-md">
+            Search: Our unique algorithm makes it easy to find venues,
+            check-ins, and events.
+          </p>
+        </div>
+        <div className="flex align-center my-3">
+          <img
+            src="/check-mark.png"
+            alt=""
+            className="h-5 rounded-full mr-3 mt-1"
+          />
+          <p className="text-md">
+            Discover: On our platform you can find pickup games, leagues,
+            tournaments, or practices. Narrow down your results with the advance
+            filter.
+          </p>
+        </div>
+        <div className="flex align-center my-3">
+          <img
+            src="/check-mark.png"
+            alt=""
+            className="h-5 rounded-full mr-3 mt-1"
+          />
+          <p className="text-md">
+            Create: Create your own activity. Post to the community your pickup
+            game if you need extra player. (Are you a coach or run a league,
+            contact us directly)
+          </p>
+        </div>
       </div>
     </div>
   );
