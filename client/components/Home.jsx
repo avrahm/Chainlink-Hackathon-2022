@@ -42,7 +42,7 @@ export const Home = () => {
         </h4>
       </div>
       <section className=" mt-10">
-        <div className="flex justify-around">
+        <div className="flex md:flex-row flex-col justify-around">
           <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
             <img
               className="rounded-t-xl"
@@ -63,7 +63,7 @@ export const Home = () => {
               <p className="font-bold text-base py-2">Set up preferences</p>
               <p>
                 10+ Sports: Football, Basketball, Baseball, Ultimate Frisbee,
-                Hockey, Tennis, Softball, Volleyball and more to come!
+                Hockey, Tennis, Softball, Volleyball and many more!
               </p>
             </div>
           </div>
