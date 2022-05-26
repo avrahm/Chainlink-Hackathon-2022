@@ -33,8 +33,8 @@ export const Home = () => {
       </div>
 
       <div>
-        <h2 className="text-center text-3xl text-semibold mt-16">
-          How SPORTS<span className="text-green-500">VYBE</span> works:
+        <h2 className="text-center text-3xl font-semibold mt-16">
+          How <span className="text-green-500">SPORTS</span>VYBE works:
         </h2>
         <h4 className=" text-center mt-2 text-md">
           Our Mission is to improve the health in our community through fitness

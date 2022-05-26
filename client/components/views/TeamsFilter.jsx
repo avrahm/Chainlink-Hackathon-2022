@@ -86,7 +86,7 @@ export default function TeamsFilter({ filterTeams, isLoading }) {
                 </select>
             </div>
 
-            <button onClick={() => filterTeams(filterBy, filterValue)} disabled={isLoading} className="px-2 py-1 my-2 bg-green-200 rounded-full">
+            <button onClick={() => filterTeams(filterBy, filterValue)} disabled={isLoading} className="px-4 py-2 mx-3 my-2 bg-green-200 hover:bg-green-500 rounded-full">
                 Apply
             </button>
         </div>
