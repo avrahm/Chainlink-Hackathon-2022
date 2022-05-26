@@ -70,14 +70,13 @@ export const Home = () => {
           <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
             <img
               className="rounded-t-xl"
-              src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
+              src="/AM.PNG"
               alt=""
             />
             <div className="pt-4 px-4 pb-12">
-              <p className="font-bold text-base py-2">Connect Your Wallet</p>
+              <p className="font-bold text-base py-2">Get active and win Challenges!</p>
               <p>
-                Find people that love the sport just as much as you do. Be a
-                part of your local community.
+                Connect & compete with several other teams, win and earn rewards from challenges
               </p>
             </div>
           </div>
