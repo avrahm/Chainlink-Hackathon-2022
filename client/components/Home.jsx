@@ -9,15 +9,15 @@ export const Home = () => {
           <h1 className="text-7xl mb-5 font-semibold">
             <span className="text-green-500 pt-10">Sports</span>Vybe
           </h1>
-          <h4 className="text-2xl text-gray-500">
+          <h4 className="text-2xl text-gray-600">
             Connecting People to Recreational Sports
           </h4>
-          <p className="text-lg pt-3 text-gray-500">
+          <p className="text-lg pt-3 text-gray-600">
             The easiest way to find pickup games, sport leagues, & recreational{" "}
             <br />
             facilities - All in the palm of your hand!
           </p>
-          <h4 className="pt-5 font-serif font-thin text-gray-500 text-lg">
+          <h4 className="pt-5 font-serif font-thin text-gray-600 text-lg">
             For Both Web and Mobile Devices
           </h4>
         </div>
@@ -31,19 +31,68 @@ export const Home = () => {
           />
         </div>
       </div>
+
       <div>
-        <h3 className="text-3xl text-center mt-6">
-          OUR <span className="text-green-500">MISSION</span>:
-        </h3>
-        <h2 className=" text-center mt-2">
+        <h2 className="text-center text-3xl text-semibold mt-8">
+          How SPORTS<span className="text-green-500">VYBE</span> works:
+        </h2>
+        <h4 className=" text-center mt-2 text-lg">
           Our Mission is to improve the health in our community through fitness
           and sociability.
-        </h2>
+        </h4>
+      </div>
+      <section className=" mt-10">
+        <div className="flex justify-around">
+          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
+            <img
+              className="rounded-t-xl"
+              src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
+              alt=""
+            />
+            <div className="py-4 px-4">
+              <h5 className="text-gray-900 text-xl font-medium mb-2">
+                Card title
+              </h5>
+              <p className="text-gray-700 text-base mb-12">
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
+              </p>
+            </div>
           </div>
-          
-          <div>
-              <h2>How SportsVybe Works:</h2>
+          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
+            <img
+              className="rounded-t-xl"
+              src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
+              alt=""
+            />
+            <div className="py-4 px-4">
+              <h5 className="text-gray-900 text-xl font-medium mb-2">
+                Card title
+              </h5>
+              <p className="text-gray-700 text-base mb-4">
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
+              </p>
+            </div>
           </div>
+          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
+            <img
+              className="rounded-t-xl"
+              src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
+              alt=""
+            />
+            <div className="py-4 px-4">
+              <h5 className="text-gray-900 text-xl font-medium mb-2">
+                Card title
+              </h5>
+              <p className="text-gray-700 text-base mb-4">
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
