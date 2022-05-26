@@ -50,7 +50,7 @@ export const Home = () => {
               alt=""
             />
             <div className="pt-4 px-4 pb-12">
-              <p className="font-bold text-base py-2">Connect Your Wallet</p>
+              <p className="font-bold text-base py-2">Connect Your Wallet and create an account</p>
               <p>
                 Find people that love the sport just as much as you do. Be a
                 part of your local community.
