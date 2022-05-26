@@ -46,16 +46,24 @@ export const Home = () => {
           <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
             <img
               className="rounded-t-xl"
-              src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
+              src="https://media.istockphoto.com/photos/ball-is-connecting-us-picture-id1085308182?k=20&m=1085308182&s=612x612&w=0&h=9OA_mFvT2KiiiEKqcpi1A29ogXAFk28lKjwua3_e0bI="
               alt=""
             />
-            <div className="py-4 px-4">
-              <h5 className="text-gray-900 text-xl font-medium mb-2">
-                Card title
-              </h5>
-              <p className="text-gray-700 text-base mb-12">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+            <div className="pt-4 px-4 pb-12">
+              <p className="font-bold text-base py-2">Connect Your Wallet</p>
+              <p>
+                Find people that love the sport just as much as you do. Be a
+                part of your local community.
+              </p>
+            </div>
+          </div>
+          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
+            <img className="rounded-t-xl" src="/Section1.jpg" alt="" />
+            <div className="pt-4 px-4 pb-12">
+              <p className="font-bold text-base py-2">Set up preferences</p>
+              <p>
+                10+ Sports: Football, Basketball, Baseball, Ultimate Frisbee,
+                Hockey, Tennis, Softball, Volleyball and more to come!
               </p>
             </div>
           </div>
@@ -65,29 +73,11 @@ export const Home = () => {
               src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
               alt=""
             />
-            <div className="py-4 px-4">
-              <h5 className="text-gray-900 text-xl font-medium mb-2">
-                Card title
-              </h5>
-              <p className="text-gray-700 text-base mb-4">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </p>
-            </div>
-          </div>
-          <div className="rounded-lg shadow-lg bg-white w-80 hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
-            <img
-              className="rounded-t-xl"
-              src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
-              alt=""
-            />
-            <div className="py-4 px-4">
-              <h5 className="text-gray-900 text-xl font-medium mb-2">
-                Card title
-              </h5>
-              <p className="text-gray-700 text-base mb-4">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+            <div className="pt-4 px-4 pb-12">
+              <p className="font-bold text-base py-2">Connect Your Wallet</p>
+              <p>
+                Find people that love the sport just as much as you do. Be a
+                part of your local community.
               </p>
             </div>
           </div>
