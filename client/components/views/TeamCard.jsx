@@ -72,7 +72,7 @@ export const TeamCard = ({ team, teamObject = null }) => {
           )}
           <a
             href={`/team/${teamObject.id}`}
-            className="px-2 py-1 my-2 bg-blue-400 rounded-full hover:bg-blue-700 transition ease-in-out delay-100  hover:ease-in-out"
+            className="px-2 py-1 my-2 text-white bg-blue-600 rounded-full hover:bg-blue-800 transition ease-in-out delay-100  hover:ease-in-out"
           >
             View Team
           </a>

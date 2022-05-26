@@ -33,7 +33,7 @@ export const Home = () => {
       </div>
 
       <div>
-        <h2 className="text-center text-3xl text-semibold mt-8">
+        <h2 className="text-center text-3xl text-semibold mt-16">
           How SPORTS<span className="text-green-500">VYBE</span> works:
         </h2>
         <h4 className=" text-center mt-2 text-lg">
