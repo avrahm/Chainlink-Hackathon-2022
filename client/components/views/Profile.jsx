@@ -13,7 +13,7 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
     return (
       <div className="flex flex-col justify-center items-center">
         <div className="py-4">
-          <h1>Player Profile</h1>
+          <h1>PLAYER PROFILE:</h1>
         </div>
         <div className="flex flex-col w-[480px] lg:w-[600px]">
           <div className="flex flex-col w-full justify-center items-center border-gray-200 p-2 rounded-lg shadow-lg bg-white hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-outp-5">
@@ -47,7 +47,7 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
             {wallet ? (
               <button
                 onClick={() => toggleEditProfileModal(true)}
-                className="px-4 py-3 my-4 w-full bg-gray-200 rounded-full"
+                className="px-4 py-3 my-4 w-full bg-green-200 rounded-full hover:bg-green-400"
               >
                 {userData.newUser ? "Complete Profile" : "Edit Profile"}
               </button>
@@ -109,7 +109,7 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
               <h1>Team(s) </h1>
               {isAuthenticated && isCurrentUser && (
                 <button
-                  className="px-2 py-1 w-[120px] mx-4 bg-gray-200 rounded-full"
+                  className="px-2 py-1 w-[120px] mx-4 bg-green-200 rounded-full hover:bg-green-400"
                   onClick={() => toggleManageTeamModal(!manageTeamModal)}
                 >
                   Create Team

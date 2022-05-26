@@ -49,70 +49,78 @@ export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
     }, [user]);
 
     return (
-        <Modal open={modalView} onClose={() => toggleModal(false)}>
-            <div className="flex flex-col border-2 border-green-100 p-4 items-center">
-                <div>Edit Profile</div>
+      <Modal open={modalView} onClose={() => toggleModal(false)}>
+        <div className="flex flex-col border-2 border-green-100 p-4 items-center">
+          <div>Edit Profile</div>
 
-                <div className="p-2">
-                    {user && user.newUser && <span className="py-2 text-red-400">Please complete profile:</span>}
-                    {error && <span className="py-2">Upload Error: {error}</span>}
-                </div>
+          <div className="p-2">
+            {user && user.newUser && (
+              <span className="py-2 text-red-400">
+                Please complete profile:
+              </span>
+            )}
+            {error && <span className="py-2">Upload Error: {error}</span>}
+          </div>
 
-                <div className="p-2">
-                    <span>Display Name:</span>
-                    <input
-                        value={editDisplayName}
-                        className="mx-3 px-2 py-1 rounded bg-gray-300"
-                        onChange={(e) => setEditDisplayName(e.target.value)}
-                    />
-                </div>
+          <div className="p-2">
+            <span>Display Name:</span>
+            <input
+              value={editDisplayName}
+              className="mx-3 px-2 py-1 rounded bg-gray-300 outline-green-400"
+              onChange={(e) => setEditDisplayName(e.target.value)}
+            />
+          </div>
 
-                <div className="p-2">
-                    <span>Sports Preferences:</span>
-                    <input value={newSportInput} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setNewSportInput(e.target.value)} />
-                    <button
-                        onClick={() => handleAddSportsPreferences()}
-                        disabled={newSportInput.length < 1}
-                        className="px-2 py-1 rounded bg-green-400 disabled:bg-slate-300"
-                    >
-                        Add
-                    </button>
-                    {editSportsPreferences != undefined && (
-                        <ul>
-                            {editSportsPreferences.map((sport, i) => {
-                                return (
-                                    <li key={i}>
-                                        {sport.toUpperCase()}
-                                        <button
-                                            className="bg-green-300 rounded justify-center p-1 items-center text-xs"
-                                            onClick={() => handleRemoveSportsPreferences(i)}
-                                        >
-                                            X
-                                        </button>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    )}
-                </div>
+          <div className="p-2">
+            <span>Sports Preferences:</span>
+            <input
+              value={newSportInput}
+              className="mx-3 px-2 py-1 rounded bg-gray-300 outline-green-400"
+              onChange={(e) => setNewSportInput(e.target.value)}
+            />
+            <button
+              onClick={() => handleAddSportsPreferences()}
+              disabled={newSportInput.length < 1}
+              className="px-2 py-1 rounded bg-green-400 disabled:bg-slate-300"
+            >
+              Add
+            </button>
+            {editSportsPreferences != undefined && (
+              <ul>
+                {editSportsPreferences.map((sport, i) => {
+                  return (
+                    <li key={i}>
+                      {sport.toUpperCase()}
+                      <button
+                        className="bg-green-300 rounded justify-center p-1 items-center text-xs"
+                        onClick={() => handleRemoveSportsPreferences(i)}
+                      >
+                        X
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
 
-                <div className="p-2">
-                    <span>Picture:</span>
-                    <input
-                        accept="image/x-png,image/gif,image/jpeg"
-                        type="file"
-                        onChange={(e) => setFile(e.target.files[0])}
-                        className="mx-3 px-2 py-1 rounded bg-gray-300"
-                    />
-                </div>
-                <button
-                    disabled={isUploading || userObject.isSaving}
-                    className="my-3 px-2 py-1 bg-green-300 rounded-full disabled:bg-gray-400"
-                    onClick={() => handleSubmit()}
-                >
-                    Save
-                </button>
-            </div>
-        </Modal>
+          <div className="p-2">
+            <span>Picture:</span>
+            <input
+              accept="image/x-png,image/gif,image/jpeg"
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="mx-3 px-2 py-1 rounded bg-gray-300"
+            />
+          </div>
+          <button
+            disabled={isUploading || userObject.isSaving}
+            className="my-3 px-4 py-1 bg-green-300 rounded-full disabled:bg-gray-400 hover:bg-green-400"
+            onClick={() => handleSubmit()}
+          >
+            Save
+          </button>
+        </div>
+      </Modal>
     );
 };

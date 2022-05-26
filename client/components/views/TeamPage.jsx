@@ -50,7 +50,7 @@ export default function TeamPage({ team, teamIsLoading, wallet, teamObject }) {
             {user && !isTeamMember && (
               <button
                 onClick={() => alert("Challenge")}
-                className="px-4 py-3 my-4  w-full bg-green-200 rounded-full"
+                className="px-4 py-3 my-4  w-full bg-green-200 rounded-full hover:bg-green-400"
               >
                 Challenge Team
               </button>
