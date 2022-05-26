@@ -48,7 +48,7 @@ export const TeamCard = ({ team, teamObject = null }) => {
         <div className="flex flex-row w-full items-center justify-around p-2">
           {user && !isTeamMember && (
             <button
-              className="px-2 py-1 my-2 bg-green-200 rounded-full"
+              className="px-2 py-1 my-2 bg-green-200 rounded-full hover:bg-green-400 "
               onClick={() => alert("Challenge Team")}
             >
               Challenge Team
