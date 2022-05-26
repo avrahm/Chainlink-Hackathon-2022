@@ -81,6 +81,9 @@ export const Home = () => {
           </div>
         </div>
       </section>
+      <div className="mt-20">
+        <h1 className="text-3xl">Basic Features</h1>
+      </div>
     </div>
   );
 };
