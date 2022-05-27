@@ -6,7 +6,7 @@ export const Home = () => {
     <div>
       <div className="flex-col md:flex-row flex md:items-center md:justify-center">
         <div>
-          <h1 className="text-7xl mb-5 font-semibold">
+          <h1 className="text-7xl mb-5 font-semibold font-serif">
             <span className="text-green-500 pt-10">Sports</span>Vybe
           </h1>
           <h4 className="text-2xl text-gray-600">
@@ -50,7 +50,9 @@ export const Home = () => {
               alt=""
             />
             <div className="pt-4 px-4 pb-12">
-              <p className="font-bold text-base py-2">Connect Your Wallet and create an account</p>
+              <p className="font-bold text-base py-2">
+                Connect Your Wallet and create an account
+              </p>
               <p>
                 Find people that love the sport just as much as you do. Be a
                 part of your local community.
