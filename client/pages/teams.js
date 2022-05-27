@@ -5,7 +5,7 @@ export default function TeamsPage() {
         <div className="mb-auto">
             <div className="flex flex-col justify-center items-center">
                 <div className="py-4">
-                    <h1>Teams Page</h1>
+                    <h1>Explore the various teams Available!</h1>
                 </div>
                 <TeamsController />
             </div>

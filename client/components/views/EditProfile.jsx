@@ -1,44 +1,60 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useMoralisFile } from "react-moralis";
+import { sports } from "../../configs/constants";
+import { useContract } from "../../context/ContractProvider";
 import Modal from "../Layout/Modal";
+import { Toast } from "../Toast";
 
 export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
     const router = useRouter();
     const { error, isUploading, saveFile } = useMoralisFile();
-
+    const { createTeam, isContractLoading, contractMessage } = useContract();
     const [editDisplayName, setEditDisplayName] = useState("");
-    const [newSportInput, setNewSportInput] = useState("");
     const [editSportsPreferences, setEditSportsPreferences] = useState([]);
     const [file, setFile] = useState(null);
 
     const handleSubmit = async (e) => {
-        const formData = {
-            userDisplayName: editDisplayName,
-            userSportsPreferences: editSportsPreferences,
-            newUser: false, // activate user by default
-        };
+        if (isFormValid()) {
+            const formData = {
+                userDisplayName: editDisplayName,
+                userSportsPreferences: editSportsPreferences,
+                newUser: false, // activate user by default
+            };
 
-        try {
-            if (file) {
-                const fileUpload = await saveFile(user.username, file);
-                formData.userPhoto = fileUpload._url;
+            try {
+                if (file) {
+                    const fileUpload = await saveFile(user.username, file);
+                    formData.userPhoto = fileUpload._url;
+                }
+                if (user.newUser) {
+                    // create user on chain to be challenged
+                    const createTeamOnChain = await createTeam();
+                    if (!createTeamOnChain) return;
+                }
+                // update user in database
+                await userObject.save(formData);
+                if (!userObject.isSaving) router.reload();
+            } catch (error) {
+                console.error(error);
             }
-            await userObject.save(formData);
-            if (!userObject.isSaving) router.reload();
-        } catch (error) {
-            console.error(error);
         }
     };
 
-    const handleAddSportsPreferences = () => {
-        setEditSportsPreferences([newSportInput, ...editSportsPreferences]);
-        setNewSportInput("");
+    const handleSportsPreferences = (sport, isChecked) => {
+        if (isChecked) {
+            setEditSportsPreferences([...editSportsPreferences].filter((eaSport) => eaSport != sport));
+        } else {
+            setEditSportsPreferences([sport, ...editSportsPreferences]);
+        }
     };
 
-    const handleRemoveSportsPreferences = (i) => {
-        const newPreferences = editSportsPreferences.filter((sport, index) => index !== i);
-        setEditSportsPreferences(newPreferences);
+    const isFormValid = () => {
+        if (!editDisplayName || editSportsPreferences.length < 1) {
+            alert("Please fill out all fields.");
+            return false;
+        }
+        return true;
     };
 
     useEffect(() => {
@@ -50,69 +66,66 @@ export const EditProfile = ({ user, toggleModal, modalView, userObject }) => {
 
     return (
         <Modal open={modalView} onClose={() => toggleModal(false)}>
-            <div className="flex flex-col border-2 border-green-100 p-4 items-center">
-                <div>Edit Profile</div>
-
+            <div className="flex flex-col border-2 border-green-100 p-4 items-center w-full">
                 <div className="p-2">
-                    {user && user.newUser && <span className="py-2 text-red-400">Please complete profile:</span>}
+                    {user && user.newUser ? <span className="py-2 text-red-400">Complete your profile:</span> : <div>Edit Profile</div>}
                     {error && <span className="py-2">Upload Error: {error}</span>}
                 </div>
+                <div className="flex flex-row w-full">
+                    <div className="w-1/2 p-2">
+                        <span className="h-[60px] my-1 flex justify-end items-center">Display Name:</span>
 
-                <div className="p-2">
-                    <span>Display Name:</span>
-                    <input
-                        value={editDisplayName}
-                        className="mx-3 px-2 py-1 rounded bg-gray-300"
-                        onChange={(e) => setEditDisplayName(e.target.value)}
-                    />
-                </div>
+                        <span className="h-[120px] my-1 flex justify-end items-center">Sports Preferences:</span>
 
-                <div className="p-2">
-                    <span>Sports Preferences:</span>
-                    <input value={newSportInput} className="mx-3 px-2 py-1 rounded bg-gray-300" onChange={(e) => setNewSportInput(e.target.value)} />
-                    <button
-                        onClick={() => handleAddSportsPreferences()}
-                        disabled={newSportInput.length < 1}
-                        className="px-2 py-1 rounded bg-green-400 disabled:bg-slate-300"
-                    >
-                        Add
-                    </button>
-                    {editSportsPreferences != undefined && (
-                        <ul>
-                            {editSportsPreferences.map((sport, i) => {
+                        <span className="h-[60px] my-1 flex justify-end items-center">Picture:</span>
+                    </div>
+                    <div className="w-1/2 p-2">
+                        <span className="h-[60px] my-1 flex justify-start items-center">
+                            <input
+                                value={editDisplayName}
+                                className="m-2 px-2 py-1 rounded bg-gray-300 outline-green-400"
+                                onChange={(e) => setEditDisplayName(e.target.value)}
+                            />
+                        </span>
+                        <span className="h-[120px] my-1 flex justify-start items-center flex-wrap">
+                            {sports.sort().map((sport, i) => {
+                                const isChecked = editSportsPreferences.includes(sport);
                                 return (
-                                    <li key={i}>
-                                        {sport.toUpperCase()}
-                                        <button
-                                            className="bg-green-300 rounded justify-center p-1 items-center text-xs"
-                                            onClick={() => handleRemoveSportsPreferences(i)}
-                                        >
-                                            X
-                                        </button>
-                                    </li>
+                                    <button
+                                        key={i}
+                                        className={`m-1 px-2 py-1 rounded text-sm  ${isChecked ? "bg-green-100" : "bg-gray-300"}`}
+                                        onClick={() => handleSportsPreferences(sport, isChecked)}
+                                    >
+                                        {sport}
+                                    </button>
                                 );
                             })}
-                        </ul>
-                    )}
+                        </span>
+                        <span className="h-[60px] my-1 flex justify-start items-center">
+                            {/* {file && <Image src={file.preview} width="150" height="150" />} */}
+                            <input
+                                accept="image/x-png,image/gif,image/jpeg"
+                                type="file"
+                                onChange={(e) => setFile(e.target.files[0])}
+                                className="mx-3 px-2 py-1 rounded bg-gray-300"
+                            />
+                        </span>
+                    </div>
                 </div>
-
-                <div className="p-2">
-                    <span>Picture:</span>
-                    <input
-                        accept="image/x-png,image/gif,image/jpeg"
-                        type="file"
-                        onChange={(e) => setFile(e.target.files[0])}
-                        className="mx-3 px-2 py-1 rounded bg-gray-300"
-                    />
-                </div>
-                <button
-                    disabled={isUploading || userObject.isSaving}
-                    className="my-3 px-2 py-1 bg-green-300 rounded-full disabled:bg-gray-400"
-                    onClick={() => handleSubmit()}
-                >
-                    Save
-                </button>
+                {isContractLoading ? (
+                    <span className="my-3 px-2 py-1 ">...Minting</span>
+                ) : (
+                    <button
+                        disabled={isUploading || userObject.isSaving}
+                        className="my-3 px-4 py-1 bg-green-300 rounded-full disabled:bg-gray-400 hover:bg-green-400"
+                        onClick={() => handleSubmit()}
+                    >
+                        Save
+                    </button>
+                )}
             </div>
+
+            {contractMessage && !isContractLoading && <Toast type={contractMessage.statusColor}>{contractMessage.message}</Toast>}
         </Modal>
     );
 };
