@@ -11,7 +11,7 @@ contract SportsVybeToken is ERC20 {
  
     constructor() public ERC20("SportsVybe", "SVC") {
         _mint(msg.sender, 1000000000000000000000000); 
-   }
- 
+    }
+  
  
 }
