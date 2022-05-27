@@ -232,8 +232,8 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
 
       //move funds to smart contract
       //sportsVybeToken.allowance(msg.sender, address(this));
-     // sportsVybeToken.transferFrom(msg.sender,address(this),amount);
-      sportsVybeToken.transfer(address(this),msg.value);
+      //sportsVybeToken.transferFrom(msg.sender,address(this),amount);
+      //sportsVybeToken.transfer(address(this),msg.value);
 
       //TODO: Add the members of the team      
 
