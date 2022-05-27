@@ -2,8 +2,8 @@ export const Home = () => {
     return (
       <div>
         <div className="flex-col md:flex-row flex md:items-center md:justify-center">
-          <div>
-            <h1 className="text-4xl md:text-7xl mb-2 md:mb-5 font-semibold font-serif">
+          <div className="animate-fade-in-left">
+            <h1 className="text-4xl md:text-7xl mb-2 md:mb-5 font-semibold font-serif ">
               <span className="text-green-500 pt-2 md:pt-10">Sports</span>Vybe
             </h1>
             <h4 className="text-md md:text-2xl text-gray-600">
@@ -13,13 +13,15 @@ export const Home = () => {
               Our Mission is to improve the health in our community through
               fitness and sociability.
             </p>
-            <h4 className="pt-5 text-gray-600 text-lg">
+            <h4 className="pt-5 text-gray-600 text-md">
               For Both Web and Mobile Devices{" "}
-              <span className="text-xs text-green-600">* Coming Soon</span>
+              <span className="text-xs text-green-600 animate-pulse font-extrabold">
+                * Coming Soon
+              </span>
             </h4>
           </div>
 
-          <div>
+          <div className="animate-fade-in-right">
             <img
               src="/heroSecImg.png"
               alt="SportsVybe header"
@@ -76,7 +78,7 @@ export const Home = () => {
             </div>
           </div>
         </section>
-        <div className="md:mx-32 mb-4 mt-10">
+        <div className="md:mx-32 mb-4 mt-10 animate-fadeIn">
           <h1 className="text-left text-2xl border-b-2 inline pb-1 border-green-700">
             What is does:
           </h1>
