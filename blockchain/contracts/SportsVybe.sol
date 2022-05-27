@@ -206,13 +206,13 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
        newSportsmanship () 
        teamOwner(team_id) 
        returns (uint) {
-       uint amount = 20;
+       //uint amount = 20;
        uint _interval = 5;
        uint id = new_challenge_id;
        challengePools[id] = ChallengePool(
          team_id, 
          challenged_team_id,
-         amount,
+         msg.value,
          false,
          false,
          block.timestamp,
@@ -233,7 +233,7 @@ contract SportsVybe is Ownable, KeeperCompatibleInterface {
       //move funds to smart contract
       //sportsVybeToken.allowance(msg.sender, address(this));
      // sportsVybeToken.transferFrom(msg.sender,address(this),amount);
-       //sportsVybeToken.transfer(address(this),amount);
+      sportsVybeToken.transfer(address(this),msg.value);
 
       //TODO: Add the members of the team      
 
