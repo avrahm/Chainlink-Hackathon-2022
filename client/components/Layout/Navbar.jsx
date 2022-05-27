@@ -17,7 +17,7 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <div className="md:hidden p-2">
-                    <button onClick={() => setIsOpen(!isOpen)} type="button" className="block text-[#2546bd] hover:[#2546bd]">
+                    <button onClick={() => setIsOpen(!isOpen)} type="button" className="block text-[#17362a] hover:text-green-600">
                         <svg className="h-6 w-6 fill-current" viewBox="0 0 100 80">
                             <rect width="100" height="20"></rect>
                             <rect y="30" width="100" height="20"></rect>
