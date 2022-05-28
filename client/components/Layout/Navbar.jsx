@@ -9,9 +9,9 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <nav className="md:px-4 md:flex md:justify-between md:items-center border-b-2 static">
+      <nav className="md:px-4 md:flex md:justify-between md:items-center border-b-2">
         <div className="flex items-center justify-between px-4">
-          <div className="p-2 cursor-pointer">
+          <div className="p-2 mt-2 cursor-pointer w-24 md:w-32">
             <Link href="/">
               <Image
                 src="/logo_blackvybe.png"
