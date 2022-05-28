@@ -40,7 +40,7 @@
 
 @media screen and (max-width: 568px) {
   .main {
-    padding: 4rem 1rem;
+    padding: 1rem 1rem;
     flex-direction: column;
     justify-content: center;
     align-items: center;
