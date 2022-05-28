@@ -11,7 +11,7 @@ export default function Navbar() {
     return (
         <nav className="md:px-4 md:flex md:justify-between md:items-center">
             <div className="flex items-center justify-between px-4">
-                <div className="p-2">
+                <div className="p-2 cursor-pointer">
                     <Link href="/">
                         <Image src="/logo_blackvybe.png" alt="SportsVybe Logo" width={125} height={25} />
                     </Link>
@@ -28,11 +28,20 @@ export default function Navbar() {
             </div>
             <div className={`px-4 pt-2 pb-4 md:pb-0 md:flex md:p-0 ${isOpen ? "block" : "hidden"}`}>
                 <div className="md:flex list-none flex-row justify-between items-center flex-initial">
-                    <div className="block rounded px-2 py-1 mx-4 cursor-pointer hover:text-green-600">
-                        <Link href="/" className="px-2">
-                            Home
-                        </Link>
-                    </div>
+                    {!wallet && (
+                        <>
+                            <div className="block rounded px-2 py-1 mx-4 cursor-pointer hover:text-green-600">
+                                <Link href="/" className="px-2">
+                                    Home
+                                </Link>
+                            </div>
+                            <div className="block rounded px-2 py-1 mx-4 cursor-pointer hover:text-green-600">
+                                <Link href="/about" className="px-2">
+                                    About
+                                </Link>
+                            </div>
+                        </>
+                    )}
                     <div className="block rounded px-2 py-1 mx-4 cursor-pointer hover:text-green-600">
                         <Link href="/teams" className="px-2">
                             Teams
@@ -47,12 +56,12 @@ export default function Navbar() {
                         <>
                             <div className="block rounded px-2 py-1 mx-4 cursor-pointer hover:text-green-600">
                                 <Link href="/profile" className="px-2">
-                                    Profile
+                                    My Profile
                                 </Link>
                             </div>
                             <div className="block rounded px-2 py-1 mx-4 cursor-pointer hover:text-green-600">
                                 <Link href="/challenges" className="px-2">
-                                    Challenges
+                                    My Challenges
                                 </Link>
                             </div>
                         </>
