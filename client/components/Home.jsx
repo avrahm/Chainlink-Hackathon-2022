@@ -13,9 +13,11 @@ export const Home = () => {
               Our Mission is to improve the health in our community through
               fitness and sociability.
             </p>
-            <h4 className="pt-5 text-gray-600 text-lg">
+            <h4 className="pt-5 text-gray-600 text-md">
               For Both Web and Mobile Devices{" "}
-              <span className="text-xs text-green-600">* Coming Soon</span>
+              <span className="text-xs text-green-600 animate-pulse font-extrabold">
+                * Coming Soon
+              </span>
             </h4>
           </div>
 
