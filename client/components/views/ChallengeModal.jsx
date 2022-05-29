@@ -23,17 +23,20 @@ export const ManageChallenge = ({
     const [userTeams, setUserTeams] = useState([]);
 
     const [challengeSports, setChallengeSports] = useState(challenge.challengeSports || "");
-    const [challengeAmount, setChallengeAmount] = useState(challenge.challengeAmount || "");
+    const [challengeAmount, setChallengeAmount] = useState(challenge.challengeAmount || "0.00");
     const [challengeMessage, setChallengeMessage] = useState(challenge.challengeMessage || "");
     const [challengeTeam1, setChallengeTeam1] = useState(userTeamId || "");
     const [challengeTeam2, setChallengeTeam2] = useState(challengeTeamId || "");
+    const [challengeTeamAdmin, setChallengeTeamAdmin] = useState(team.teamAdmin || "");
 
     const challengeFormData = {
-        challengeTeam1: challengeTeam1 || "",
-        challengeTeam2: challengeTeam2 || "",
+        challengeTeam1: challengeTeam1,
+        challengeTeam2: challengeTeam2,
         challengeAmount: challengeAmount,
         challengeMessage: challengeMessage,
         challengeSport: challengeSports,
+        challengeCreator: user.get("username"),
+        challengeTeamAdmin: challengeTeamAdmin,
     };
 
     const handleSubmit = async () => {
@@ -124,7 +127,7 @@ export const ManageChallenge = ({
                                                 <option
                                                     key={i}
                                                     value={team.attributes.teamChainId}
-                                                    selected={challengeTeam1 == team.attributes.teamChainId}
+                                                    defaultValue={challengeTeam1 == team.attributes.teamChainId}
                                                 >
                                                     {team.attributes.teamName}
                                                 </option>
@@ -171,9 +174,12 @@ export const ManageChallenge = ({
                             disabled={isContractLoading}
                             className="my-3 px-2 py-1 bg-green-300 rounded-full disabled:bg-slate-300"
                             onClick={() => handleSubmit()}
+                            // onClick={() => runContractFunction()}
                         >
                             {createNewChallenge ? "Create Challenge" : "Update Challenge"}
                         </button>
+
+                        <button onClick={() => console.log(challengeFormData)}>log</button>
                         {contractMessage && !isContractLoading && <Toast type={contractMessage.statusColor}>{contractMessage.message}</Toast>}
                     </>
                 )}
