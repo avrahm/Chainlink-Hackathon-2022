@@ -27,7 +27,7 @@ export const ManageChallenge = ({
     const [challengeMessage, setChallengeMessage] = useState(challenge.challengeMessage || "");
     const [challengeTeam1, setChallengeTeam1] = useState(userTeamId || "");
     const [challengeTeam2, setChallengeTeam2] = useState(challengeTeamId || "");
-    const [challengeTeamAdmin, setChallengeTeamAdmin] = useState(team.teamAdmin || "");
+    const [challengeTeam2Admin, setChallengeTeam2Admin] = useState(team.teamAdmin || "");
 
     const challengeFormData = {
         challengeTeam1: challengeTeam1,
@@ -35,8 +35,8 @@ export const ManageChallenge = ({
         challengeAmount: challengeAmount,
         challengeMessage: challengeMessage,
         challengeSport: challengeSports,
-        challengeCreator: user.get("username"),
-        challengeTeamAdmin: challengeTeamAdmin,
+        challengeTeam1Admin: user.get("username"),
+        challengeTeam2Admin: challengeTeam2Admin,
     };
 
     const handleSubmit = async () => {
@@ -64,7 +64,7 @@ export const ManageChallenge = ({
                 }
 
                 // reload page after saving
-                // if ((!getChallengesDB.isSaving && !isContractLoading && !contractMessage) || !challengeObject.isSaving) router.reload();
+                if ((!getChallengesDB.isSaving && !isContractLoading && !contractMessage) || !challengeObject.isSaving) router.push("/challenges");
             } catch (error) {
                 console.error(error);
             }
@@ -178,8 +178,6 @@ export const ManageChallenge = ({
                         >
                             {createNewChallenge ? "Create Challenge" : "Update Challenge"}
                         </button>
-
-                        <button onClick={() => console.log(challengeFormData)}>log</button>
                         {contractMessage && !isContractLoading && <Toast type={contractMessage.statusColor}>{contractMessage.message}</Toast>}
                     </>
                 )}
