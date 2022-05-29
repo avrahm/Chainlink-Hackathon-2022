@@ -3,11 +3,14 @@ import { useWallet } from "../../context/WalletProvider";
 import { Photo } from "../Photo";
 import { EditProfile } from "./EditProfile";
 import { ManageTeam } from "./ManageTeam";
+import { ManageEvent } from "./ManageEvent";
+
 import { TeamCard } from "./TeamCard";
 
 export default function Profiles({ userData, teams, isCurrentUser = false, isLoading = false, wallet, userObject }) {
     const { user, isAuthenticated, connectWallet, isAuthenticating } = useWallet();
     const [editProfileModal, toggleEditProfileModal] = useState(false);
+    const [manageEventModal, toggleManageEventModal] = useState(false);
     const [manageTeamModal, toggleManageTeamModal] = useState(false);
 
     return (
