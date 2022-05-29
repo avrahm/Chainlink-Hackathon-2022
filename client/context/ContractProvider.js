@@ -35,8 +35,34 @@ const ContractProvider = ({ children }) => {
         }
     };
 
+    const createChallenge = async (userTeamId, challengeTeamId, challengeAmount) => {
+        setIsContractLoading(true);
+        console.log("Contract! createChallenge", userTeamId, challengeTeamId, challengeAmount);
+        try {
+            const challengeAmountWei = ethers.utils.parseEther(challengeAmount);
+            console.log("challengeAmountWei", challengeAmountWei);
+            // const challengeId = 0;
+            const challengeId = await getContract()
+                .functions.createChallengePool(userTeamId, challengeTeamId, challengeAmountWei, { value: challengeAmountWei }) // create challenge transaction
+                .then((tx) => tx.wait()) // wait for transaction to be mined
+                .then((tx) => {
+                    setIsContractLoading(false);
+                    setContractMessage({ statusColor: "green", message: "Successfully created challenge on chain!" });
+                    return tx.events[0].args[0].toString(); // return challengeId as string
+                });
+            return challengeId;
+        } catch (error) {
+            setIsContractLoading(false);
+            setContractMessage({ statusColor: "red", message: error.message });
+            console.error(error);
+            return false;
+        }
+    };
+
     return (
-        <ContractContext.Provider value={{ createTeam, isContractLoading, contractMessage, setContractMessage, setIsContractLoading }}>
+        <ContractContext.Provider
+            value={{ createTeam, createChallenge, isContractLoading, contractMessage, setContractMessage, setIsContractLoading }}
+        >
             {children}
         </ContractContext.Provider>
     );
