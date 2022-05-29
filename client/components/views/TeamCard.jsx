@@ -18,7 +18,7 @@ export const TeamCard = ({ team, teamObject = null }) => {
     }
 
     return (
-        <div className="flex flex-col my-4 w-full justify-center items-start border-2 border-gray-200 p-2 rounded-lg shadow-lg bg-white hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
+        <div className="flex flex-col my-4 md:w-full w-96 ml-16 md:ml-0 justify-center items-start border-2 border-gray-200 p-2 rounded-lg shadow-lg bg-white hover:shadow-2xl transition ease-in-out delay-100  hover:ease-in-out">
             <div className="flex flex-row w-full">
                 <div className="flex flex-col w-1/2 items-center justify-center p-2">
                     <Photo src={team.teamPhoto} alt={team.teamDisplayName} size="sm" type="team" isLoading={false} />
