@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useWallet } from "../../context/WalletProvider";
 import { ManageEvent } from "./ManageEvent";
 
-export const TeamCard = ({ team, teamObject = null }) => {
+export const EventCard = ({ team, teamObject = null }) => {
   const { user } = useWallet();
   const [manageEventModal, toggleManageEventModal] = useState(false);
 
@@ -43,7 +43,7 @@ export const TeamCard = ({ team, teamObject = null }) => {
             className="px-2 py-1 my-2 bg-yellow-200 rounded-full"
             onClick={() => toggleManageEventModal(!manageEventModal)}
           >
-            Manage Team
+            Manage Event
           </button>
         )}
         <a

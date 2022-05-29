@@ -119,6 +119,17 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
                 </button>
               )}
             </div>
+            <div className="flex flex-row w-full justify-center py-3 items-center">
+              <h1>Event(s) </h1>
+              {isAuthenticated && isCurrentUser && (
+                <button
+                  className="px-2 py-1 w-[120px] mx-4 bg-green-200 rounded-full hover:bg-green-400"
+                  onClick={() => toggleManageEventModal(!manageEventModal)}
+                >
+                  Create Event
+                </button>
+              )}
+            </div>
             <div className="w-full">
               {teams && !isLoading ? (
                 teams.length > 0 &&
@@ -145,6 +156,13 @@ export default function Profiles({ userData, teams, isCurrentUser = false, isLoa
           toggleModal={toggleEditProfileModal}
           modalView={editProfileModal}
           userObject={userObject}
+        />
+
+        <ManageEvent
+          user={userData}
+          toggleModal={toggleManageEventModal}
+          modalView={manageEventModal}
+          createNewEvent={true}
         />
 
         <ManageTeam

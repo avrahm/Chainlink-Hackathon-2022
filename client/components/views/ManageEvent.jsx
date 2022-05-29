@@ -26,26 +26,26 @@ export const ManageEvent = ({
   const router = useRouter();
 
   const [eventName, setEventName] = useState(event.eventName || "");
-  const [startDate, setStartDate] = useState(new Date());
+  const [eventDate, setEventDate] = useState(new Date());
   const [newSportInput, setNewSportInput] = useState("");
   const [teamSportsPreferences, setTeamSportsPreferences] = useState(
     event.teamSportsPreferences || []
   );
   const [eventLocation, setEventLocation] = useState(event.eventLocation || "");
-  const [prizePool, setPrizePool] = useState(0);
+  const [eventPrizePool, setEventPrizePool] = useState(0);
 
   const handleSubmit = async (e) => {
     const teamFormData = {
       eventName: eventName,
+      eventDate: eventDate,
+      eventPrizePool: eventPrizePool,
       teamSportsPreferences: teamSportsPreferences,
-      // teamAdmin: team.teamAdmin || user.username,
-      teamMembers: team.teamMembers || [user.username],
       eventLocation: eventLocation || "",
       ...newTeamObject,
     };
 
     //
-    const teamUsername = teamName.split(" ").join("-").toLowerCase();
+    // const teamUsername = teamName.split(" ").join("-").toLowerCase();
 
     try {
       if (createNewTeam) teamFormData.teamUsername = teamUsername;
@@ -95,8 +95,8 @@ export const ManageEvent = ({
           </span>
           <DatePicker
             className="mx-3 px-2 py-1 rounded bg-gray-300 ml-6"
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            selected={eventDate}
+            onChange={(date) => setEventDate(date)}
           />
         </div>
 
@@ -148,11 +148,11 @@ export const ManageEvent = ({
         <div className="p-2">
           <span htmlFor="prizePool">Prize Pool:</span>
           <input
-            id="prizePool"
+            id="eventPrizePool"
             className="ml-3 mr-2 px-3 py-1 rounded bg-gray-300 w-10"
             // placeholder="Enter Prize..."
-            value={prizePool}
-            onChange={(e) => setPrizePool(e.target.value)}
+            value={eventPrizePool}
+            onChange={(e) => setEventPrizePool(e.target.value)}
           />
           <span htmlFor="prizePool" className="text-bold">
             VYBES
