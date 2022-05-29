@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { useWallet } from "../../context/WalletProvider";
 import { TeamMembersController } from "../controllers/TeamMembersController";
 import { Photo } from "../Photo";
+import { ManageChallenge } from "./ChallengeModal";
 
 export default function TeamPage({ team, teamIsLoading, wallet, teamObject }) {
     const { user, isAuthenticating, connectWallet } = useWallet();
+    const [manageChallengeModal, toggleManageChallengeModal] = useState(false);
+
     let isTeamMember = false;
     let isAdmin = false;
 
@@ -40,7 +44,10 @@ export default function TeamPage({ team, teamIsLoading, wallet, teamObject }) {
                 </div>
                 <div className="w-full">
                     {user && !isTeamMember && (
-                        <button onClick={() => alert("Challenge")} className="px-4 py-3 my-4  w-full bg-green-200 rounded-full hover:bg-green-400">
+                        <button
+                            onClick={() => toggleManageChallengeModal(!manageChallengeModal)}
+                            className="px-4 py-3 my-4  w-full bg-green-200 rounded-full hover:bg-green-400"
+                        >
                             Challenge Team
                         </button>
                     )}
@@ -92,6 +99,16 @@ export default function TeamPage({ team, teamIsLoading, wallet, teamObject }) {
                     </div>
                 </div>
             </div>
+            {user && !isTeamMember && (
+                <ManageChallenge
+                    user={user}
+                    team={team}
+                    challengeTeamId={team.teamChainId}
+                    toggleModal={toggleManageChallengeModal}
+                    modalView={manageChallengeModal}
+                    createNewChallenge={true}
+                />
+            )}
         </div>
     );
 }
