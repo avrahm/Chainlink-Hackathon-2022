@@ -47,50 +47,10 @@ export default function Navbar() {
                 Profile
               </Link>
             </div>
-<<<<<<< HEAD
-            <div className="px-4">
-                <Link href="/event" className="px-2">
-                    Event
-                </Link>
-            </div>
-            {isAuthenticated && (
-                <>
-                    <div className="px-4">
-                        <Link href="/profile" className="px-2">
-                            Profile
-                        </Link>
-                    </div>
-                    <div className="px-4">
-                        <Link href="/challenges" className="px-2">
-                            Challenges
-                        </Link>
-                    </div>
-                </>
-            )}
-            <div className="px-4">
-                {wallet ? (
-                    <button
-                        disabled={isAuthenticating}
-                        className="rounded-full bg-green-200 px-2 py-1 mx-4  disabled:bg-gray-400"
-                        onClick={() => signOutWallet()}
-                    >
-                        Disconnect {wallet.substring(0, 5)}
-                    </button>
-                ) : (
-                    <button
-                        disabled={isAuthenticating}
-                        className="rounded-full bg-green-200 px-2 py-1 mx-4 disabled:bg-gray-400"
-                        onClick={() => connectWallet()}
-                    >
-                        Connect Wallet
-                    </button>
-                )}
-=======
             <div className="px-4 hover:text-green-600">
               <Link href="/challenges" className="px-2">
                 Challenges
               </Link>
->>>>>>> d04e763462215ad95320d63a0b853c7c7232ec90
             </div>
           </>
         )}
