@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { createContext, useContext, useState } from "react";
-import { useMoralis } from "react-moralis";
 import { contractABI, contractAddress } from "../configs/configs";
 
 const ContractContext = createContext();
@@ -9,19 +8,12 @@ const ContractProvider = ({ children }) => {
     const [isContractLoading, setIsContractLoading] = useState(false);
     const [contractMessage, setContractMessage] = useState(null);
 
-    const { web3, enableWeb3, isWeb3Enabled, isWeb3EnableLoading, web3EnableError } = useMoralis();
-
     const getContract = async () => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(contractAddress, contractABI, signer);
         return contract;
     };
-
-    if (isWeb3Enabled) {
-        console.log(web3);
-        // return null;
-    }
 
     const createTeam = async () => {
         setIsContractLoading(true);
@@ -47,7 +39,7 @@ const ContractProvider = ({ children }) => {
 
     const createChallenge = async (userTeamId, challengeTeamId, challengeAmount) => {
         setIsContractLoading(true);
-        console.log("Contract! CreateChallenge: ", userTeamId, challengeTeamId, challengeAmount);
+
         try {
             const challengeAmountWei = ethers.utils.parseEther(challengeAmount);
 
@@ -80,9 +72,56 @@ const ContractProvider = ({ children }) => {
         }
     };
 
+    const acceptChallenge = async (challengeId, challengeTeam2Id, challengeAmount) => {
+        setIsContractLoading(true);
+        console.log("challengeId", challengeId);
+        console.log("challengeTeam2Id", challengeTeam2Id);
+        console.log("challengeAmount", challengeAmount);
+
+        try {
+            const challengeAmountWei = ethers.utils.parseEther(challengeAmount);
+
+            // create challenge transaction
+            const contract = await getContract();
+
+            const challengeAccepted = contract.functions
+                .acceptChallenge(challengeId, challengeTeam2Id, {
+                    value: challengeAmountWei,
+                    gasLimit: 3500000,
+                })
+                .then((tx) => tx.wait()) // wait for transaction to be mined
+                .then((tx) => {
+                    console.log(tx);
+                    setIsContractLoading(false);
+                    setContractMessage({ statusColor: "green", message: "Successfully created challenge on chain!" });
+                    return tx.events[1].args.challenge_id.toString(); // return challengeId as string
+                })
+                .catch((error) => {
+                    setIsContractLoading(false);
+                    setContractMessage({ statusColor: "red", message: error.message });
+                    console.error(error);
+                    return false;
+                });
+            return challengeAccepted;
+        } catch (error) {
+            setIsContractLoading(false);
+            setContractMessage({ statusColor: "red", message: error.message });
+            console.error(error);
+            return false;
+        }
+    };
+
     return (
         <ContractContext.Provider
-            value={{ createTeam, createChallenge, isContractLoading, contractMessage, setContractMessage, setIsContractLoading }}
+            value={{
+                createTeam,
+                createChallenge,
+                isContractLoading,
+                contractMessage,
+                setContractMessage,
+                setIsContractLoading,
+                acceptChallenge,
+            }}
         >
             {children}
         </ContractContext.Provider>
