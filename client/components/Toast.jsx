@@ -15,7 +15,7 @@ export const Toast = ({ children, type = "red", duration = 5000, open = true }) 
 
     return (
         <div
-            className={`fixed top-0 right-0 m-4 p-4 bg-${type}-300 text-white rounded-lg shadow-lg`}
+            className={`fixed top-0 right-0 m-4 p-4 bg-${type}-300 rounded-lg shadow-lg`}
             style={{
                 display: isOpen ? "block" : "none",
             }}
