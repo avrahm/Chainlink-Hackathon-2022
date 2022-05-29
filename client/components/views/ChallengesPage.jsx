@@ -23,7 +23,7 @@ export default function ChallengesPage({ createdChallenges, againstChallenges, i
                         Challenges Against
                     </div>
                 </div>
-                <div className="flex flex-row justify-center">
+                <div className="flex flex-wrap justify-center">
                     {activeTab === "created" &&
                         createdChallenges &&
                         createdChallenges.map((challenge, i) => <ChallengeCard type="created" key={i} challenge={challenge.attributes} />)}

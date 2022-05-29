@@ -39,13 +39,14 @@ export default function Navbar() {
                                     Home
                                 </Link>
                             </div>
-                            <div className="block rounded px-2 py-1 mx-4 mb-3 md:mb-0 cursor-pointer hover:text-green-600">
-                                <Link href="/about" className="px-2">
-                                    About
-                                </Link>
-                            </div>
                         </>
                     )}
+
+                    <div className="block rounded px-2 py-1 mx-4 mb-3 md:mb-0 cursor-pointer hover:text-green-600">
+                        <Link href="/about" className="px-2">
+                            About
+                        </Link>
+                    </div>
                     <div className="block rounded px-2 py-1 mb-3 md:mb-0 mx-4 cursor-pointer hover:text-green-600">
                         <Link href="/teams" className="px-2">
                             Teams
